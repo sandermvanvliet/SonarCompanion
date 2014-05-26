@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("SonarCompanion.Console")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
+[assembly: AssemblyCompany("Sander van Vliet")]
 [assembly: AssemblyProduct("SonarCompanion.Console")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2014")]
+[assembly: AssemblyCopyright("2014 Sander van Vliet")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
