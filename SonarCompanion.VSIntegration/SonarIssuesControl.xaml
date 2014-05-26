@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="Rabobank.SonarCompanion_VSIntegration.SonarIssuesControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             Background="{DynamicResource VsBrush.Window}"
+             Foreground="{DynamicResource VsBrush.WindowText}"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300"
+             Name="MyToolWindow" Loaded="MyControl_OnLoaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="28" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
+        <Grid Grid.Row="0">
+            <ComboBox Name="ProjectsComboBox" Margin="2,2,80,2" 
+                      SelectionChanged="ProjectsComboBox_OnSelectionChanged" 
+                      DisplayMemberPath="Name" />
+            <Button Name="RefreshButton" Content="Refresh" Width="76" HorizontalAlignment="Right" Margin="2" Click="RefreshButton_OnClick" />
+        </Grid>
+        <ListView Grid.Row="1" Margin="0" Name="IssuesListView" MouseDoubleClick="IssuesListView_OnMouseDoubleClick">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Project" DisplayMemberBinding="{Binding Path=Project}" Width="80" />
+                    <GridViewColumn Header="File" DisplayMemberBinding="{Binding Path=FileName}" Width="80" />
+                    <GridViewColumn Header="Line" DisplayMemberBinding="{Binding Path=Line}" Width="40" />
+                    <GridViewColumn Header="Message" DisplayMemberBinding="{Binding Path=Message}" Width="Auto" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</UserControl>

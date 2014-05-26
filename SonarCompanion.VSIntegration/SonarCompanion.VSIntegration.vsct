@@ -70,13 +70,13 @@
       </Button>
 
 
-      <Button guid="guidSonarCompanion_VSIntegrationCmdSet" id="cmdidSonarIssuesToolWindow" priority="0x0100" type="Button">
+      <!--<Button guid="guidSonarCompanion_VSIntegrationCmdSet" id="cmdidSonarIssuesToolWindow" priority="0x0100" type="Button">
         <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1"/>
         <Icon guid="guidImages" id="bmpPic2" />
         <Strings>
           <ButtonText>Sonar Issues</ButtonText>
         </Strings>
-      </Button>
+      </Button>-->
 
 
     </Buttons>
