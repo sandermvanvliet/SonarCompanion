@@ -31,6 +31,7 @@ namespace Rabobank.SonarCompanion_VSIntegration
         private readonly SonarService _sonarService;
 
         private List<Project> _projectInSolution;
+        private OptionPageGrid _properties;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SonarIssuesControl"/> class.
@@ -42,7 +43,16 @@ namespace Rabobank.SonarCompanion_VSIntegration
         {
             _dte = dte;
             InitializeComponent();
-            _sonarService = new SonarService(new Uri("http://riskitcodemetrics:9000"));
+
+            var properties = _dte.Properties["Sonar Companion", "General"];
+
+            _properties = new OptionPageGrid()
+            {
+                SonarUrl = (string) properties.Item("SonarUrl").Value,
+                DefaultProject = (string) properties.Item("DefaultProject").Value
+            };
+
+            _sonarService = new SonarService(new Uri(_properties.SonarUrl));
         }
 
         /// <summary>
@@ -101,7 +111,11 @@ namespace Rabobank.SonarCompanion_VSIntegration
         {
             var projects = _sonarService.GetProjects();
 
-            SetSafely(ProjectsComboBox, c => c.ItemsSource = projects);
+            SetSafely(ProjectsComboBox, c =>
+            {
+                c.ItemsSource = projects;
+                c.SelectedItem = projects.SingleOrDefault(p => p.Name == _properties.DefaultProject);
+            });
         }
 
         /// <summary>

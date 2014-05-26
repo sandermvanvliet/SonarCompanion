@@ -135,6 +135,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IssueListViewItem.cs" />
+    <Compile Include="OptionPageGrid.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="SonarIssuesControl.xaml.cs">
       <DependentUpon>SonarIssuesControl.xaml</DependentUpon>
     </Compile>
