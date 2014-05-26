@@ -7,7 +7,7 @@
              Foreground="{DynamicResource VsBrush.WindowText}"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
-             Name="MyToolWindow" Loaded="MyControl_OnLoaded">
+             Name="MyToolWindow" Loaded="HandleOnLoaded">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="28" />
@@ -30,5 +30,9 @@
                 </GridView>
             </ListView.View>
         </ListView>
+        <Grid Grid.Row="1" Background="White" Name="ProgressIndicator" Visibility="Collapsed">
+            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,44">Loading issues...</TextBlock>
+            <ProgressBar Name="IssueLoadProgressBar" Margin="8,0,8,0" Height="24" VerticalAlignment="Center" Minimum="0" Maximum="100" />
+        </Grid>
     </Grid>
 </UserControl>

@@ -62,7 +62,7 @@ namespace SonarCompanion.API
             return data.Data.Issues;
         }
 
-        public List<SonarIssue> GetAllIssues(string qualifier)
+        public List<SonarIssue> GetAllIssues(string qualifier, Action<int> progressCallback = null)
         {
             var uri = new Uri(sonarUri, "/api/issues/search");
 
@@ -89,6 +89,12 @@ namespace SonarCompanion.API
                 issueList.AddRange(data.Data.Issues);
 
                 lastPage = pageIndex > data.Data.Paging.Pages;
+
+                if (progressCallback != null)
+                {
+                    var percentage = ((double)pageIndex / data.Data.Paging.Pages) * 100;
+                    progressCallback((int)percentage);
+                }
             }
 
             return issueList;

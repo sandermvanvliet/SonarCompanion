@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -10,6 +11,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using SonarCompanion.API;
 using Constants = EnvDTE.Constants;
+using Task = System.Threading.Tasks.Task;
 
 namespace Rabobank.SonarCompanion_VSIntegration
 {
@@ -54,6 +56,15 @@ namespace Rabobank.SonarCompanion_VSIntegration
         /// </param>
         private void RefreshButton_OnClick(object sender, RoutedEventArgs e)
         {
+            if (ProjectsComboBox.SelectedItem != null)
+            {
+                var selectedSonarProject = ProjectsComboBox.SelectedItem as SonarProject;
+
+                if (selectedSonarProject != null)
+                {
+                    LoadIssuesForAsync(selectedSonarProject);
+                }
+            }
         }
 
         /// <summary>
@@ -74,9 +85,7 @@ namespace Rabobank.SonarCompanion_VSIntegration
 
             var selectedProject = (SonarProject) e.AddedItems[0];
 
-            var issues = _sonarService.GetAllIssues(selectedProject.Key).Select(i => new IssueListViewItem(i));
-
-            SetSafely(IssuesListView, i => i.ItemsSource = issues);
+            LoadIssuesForAsync(selectedProject);
         }
 
         /// <summary>
@@ -88,35 +97,11 @@ namespace Rabobank.SonarCompanion_VSIntegration
         /// <param name="e">
         /// The e.
         /// </param>
-        private void MyControl_OnLoaded(object sender, RoutedEventArgs e)
+        private void HandleOnLoaded(object sender, RoutedEventArgs e)
         {
             var projects = _sonarService.GetProjects();
 
             SetSafely(ProjectsComboBox, c => c.ItemsSource = projects);
-        }
-
-        /// <summary>
-        /// The set safely.
-        /// </summary>
-        /// <param name="control">
-        /// The control.
-        /// </param>
-        /// <param name="action">
-        /// The action.
-        /// </param>
-        /// <typeparam name="TControl">
-        /// </typeparam>
-        private void SetSafely<TControl>(TControl control, Action<TControl> action)
-            where TControl : Control
-        {
-            if (control.Dispatcher.CheckAccess())
-            {
-                action(control);
-            }
-            else
-            {
-                control.Dispatcher.Invoke(action);
-            }
         }
 
         /// <summary>
@@ -158,54 +143,46 @@ namespace Rabobank.SonarCompanion_VSIntegration
                 ((EnvDTE.TextSelection) window.Document.Selection).GotoLine(item.Line);
             }
         }
-    }
-
-    /// <summary>
-    /// The issue list view item.
-    /// </summary>
-    public class IssueListViewItem
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="IssueListViewItem"/> class.
-        /// </summary>
-        /// <param name="issue">
-        /// The issue.
-        /// </param>
-        public IssueListViewItem(SonarIssue issue)
+        private void SetSafely<TControl>(TControl control, Action<TControl> action)
+            where TControl : FrameworkElement
         {
-            Issue = issue;
-
-            var parts = issue.Component.Split(':');
-
-            Project = parts[1].Trim();
-            FileName = parts[2].Trim().Replace("/", "\\");
-            Line = issue.Line;
-            Message = issue.Message;
+            if (control.Dispatcher.CheckAccess())
+            {
+                action(control);
+            }
+            else
+            {
+                control.Dispatcher.Invoke(() => SetSafely(control, action));
+            }
         }
 
-        /// <summary>
-        /// Gets the project.
-        /// </summary>
-        public string Project { get; private set; }
+        private void LoadIssuesForAsync(SonarProject selectedProject)
+        {
+            ProgressIndicator.Visibility = Visibility.Visible;
+            IssuesListView.Visibility = Visibility.Collapsed;
 
-        /// <summary>
-        /// Gets the file name.
-        /// </summary>
-        public string FileName { get; private set; }
+            Task.Run(() =>
+            {
+                var issues = _sonarService
+                    .GetAllIssues(selectedProject.Key, UpdateProgress)
+                    .Select(i => new IssueListViewItem(i));
 
-        /// <summary>
-        /// Gets the line.
-        /// </summary>
-        public int Line { get; private set; }
+                SetSafely(IssuesListView, i => i.ItemsSource = issues);
 
-        /// <summary>
-        /// Gets the message.
-        /// </summary>
-        public string Message { get; private set; }
+                SetSafely(ProgressIndicator, p =>
+                {
+                    p.Visibility = Visibility.Collapsed;
+                });
+                SetSafely(IssuesListView, l =>
+                {
+                    l.Visibility = Visibility.Visible;
+                });
+            });
+        }
 
-        /// <summary>
-        /// Gets the issue.
-        /// </summary>
-        public SonarIssue Issue { get; private set; }
+        private void UpdateProgress(int percentage)
+        {
+            SetSafely(IssueLoadProgressBar, pb => pb.Value = percentage);
+        }
     }
 }
