@@ -9,5 +9,8 @@ from issues found by Sonar and your solution.
 - In the Tools / Options dialog select Sonar Companion and enter the URL to the SonarQube repository.
 - Open the issues window by clicking the Tools / Sonar Companion menu item
 
+### Visual Studio Gallery
+The extension can be downloaded from the Visual Studio Gallery [here](http://visualstudiogallery.msdn.microsoft.com/c55ea298-2ecd-4f35-b483-34e2184cc4fb)
+
 ### Contributors
 - Sander van Vliet [@SanderMvanVliet](http://twitter.com/SanderMvanVliet)
