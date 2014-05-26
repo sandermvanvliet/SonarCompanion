@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30501.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SonarCompanion.Console", "SonarCompanion.Console\SonarCompanion.Console.csproj", "{CF5E9F11-0354-4C7F-BA71-E4CE0AEF33A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SonarCompanion.API", "SonarCompanion.API\SonarCompanion.API.csproj", "{A5CB2CFA-60F5-4E08-8D15-B71B9D7BC8BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SonarCompanion.VSIntegration", "SonarCompanion.VSIntegration\SonarCompanion.VSIntegration.csproj", "{5E3C2076-BACD-4828-BFE3-54523951F0F3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CF5E9F11-0354-4C7F-BA71-E4CE0AEF33A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF5E9F11-0354-4C7F-BA71-E4CE0AEF33A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF5E9F11-0354-4C7F-BA71-E4CE0AEF33A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF5E9F11-0354-4C7F-BA71-E4CE0AEF33A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5CB2CFA-60F5-4E08-8D15-B71B9D7BC8BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5CB2CFA-60F5-4E08-8D15-B71B9D7BC8BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5CB2CFA-60F5-4E08-8D15-B71B9D7BC8BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5CB2CFA-60F5-4E08-8D15-B71B9D7BC8BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E3C2076-BACD-4828-BFE3-54523951F0F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E3C2076-BACD-4828-BFE3-54523951F0F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E3C2076-BACD-4828-BFE3-54523951F0F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E3C2076-BACD-4828-BFE3-54523951F0F3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
