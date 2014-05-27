@@ -37,6 +37,10 @@ namespace SonarCompanion.API
             this.sonarUri = sonarUri;
         }
 
+        public string Url {
+            get { return sonarUri.ToString(); }
+        }
+
         /// <summary>
         /// The get issues.
         /// </summary>

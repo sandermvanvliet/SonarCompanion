@@ -28,10 +28,11 @@ namespace Rabobank.SonarCompanion_VSIntegration
         /// <summary>
         /// The _sonar service.
         /// </summary>
-        private readonly SonarService _sonarService;
+        private SonarService _sonarService;
 
         private List<Project> _projectInSolution;
         private OptionPageGrid _properties;
+        private bool _initialized;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SonarIssuesControl"/> class.
@@ -44,15 +45,20 @@ namespace Rabobank.SonarCompanion_VSIntegration
             _dte = dte;
             InitializeComponent();
 
-            var properties = _dte.Properties["Sonar Companion", "General"];
+            LoadOptions();
 
+            _sonarService = new SonarService(new Uri(_properties.SonarUrl));
+        }
+
+        private void LoadOptions()
+        {
+            var properties = _dte.Properties["Sonar Companion", "General"];
+            
             _properties = new OptionPageGrid()
             {
                 SonarUrl = (string) properties.Item("SonarUrl").Value,
                 DefaultProject = (string) properties.Item("DefaultProject").Value
             };
-
-            _sonarService = new SonarService(new Uri(_properties.SonarUrl));
         }
 
         /// <summary>
@@ -109,12 +115,36 @@ namespace Rabobank.SonarCompanion_VSIntegration
         /// </param>
         private void HandleOnLoaded(object sender, RoutedEventArgs e)
         {
+            if (!_initialized)
+            {
+                InitializeProjects();
+                _initialized = true;
+            }
+
+            LoadOptions();
+
+            if (!string.Equals(_properties.SonarUrl, _sonarService.Url))
+            {
+                _sonarService = new SonarService(new Uri(_properties.SonarUrl));
+
+                InitializeProjects();
+            }
+        }
+
+        private void InitializeProjects()
+        {
             var projects = _sonarService.GetProjects();
 
             SetSafely(ProjectsComboBox, c =>
             {
+                // Reset list of issues (might have changed)
+                IssuesListView.ItemsSource = null;
+
                 c.ItemsSource = projects;
-                c.SelectedItem = projects.SingleOrDefault(p => p.Name == _properties.DefaultProject);
+                if (projects != null)
+                {
+                    c.SelectedItem = projects.SingleOrDefault(p => p.Name == _properties.DefaultProject);
+                }
             });
         }
 
@@ -174,6 +204,7 @@ namespace Rabobank.SonarCompanion_VSIntegration
         {
             ProgressIndicator.Visibility = Visibility.Visible;
             IssuesListView.Visibility = Visibility.Collapsed;
+            SetSafely(IssueLoadProgressBar, pb => pb.Value = 0);
 
             Task.Run(() =>
             {
