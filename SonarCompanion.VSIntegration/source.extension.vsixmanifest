@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="cec42c42-3d1a-4507-b5de-39c56bb8248c" Version="1.0" Language="en-US" Publisher="Sander van Vliet" />
+    <Identity Id="cec42c42-3d1a-4507-b5de-39c56bb8248c" Version="1.0.1" Language="en-US" Publisher="Sander van Vliet" />
     <DisplayName>SonarCompanion</DisplayName>
     <Description xml:space="preserve">SonarQube issue list integration</Description>
     <MoreInfo>http://github.com/sandermvanvliet/SonarCompanion</MoreInfo>
