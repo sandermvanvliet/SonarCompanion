@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using SonarCompanion.API;
 
 namespace Rabobank.SonarCompanion_VSIntegration
 {
-    [Export(typeof(ISonarIssuesService))]
-    public class SonarIssuesService : ISonarIssuesService
+    public class DummySonarIssuesService : ISonarIssuesService
     {
         public SonarIssue GetIssueFor(string fileName, int lineNumber)
         {
@@ -20,8 +20,8 @@ namespace Rabobank.SonarCompanion_VSIntegration
             {
                 new SonarIssue
                 {
-                    Component = "TestProject\\TestClass.cs",
-                    Key = "TORO",
+                    Component = "TestApplication:TestApplication:TestClass.cs",
+                    Key = "TestApplication",
                     Line = 10,
                     Message = "Test message at 10",
                     Rule = "Tag test message",
@@ -29,8 +29,8 @@ namespace Rabobank.SonarCompanion_VSIntegration
                 },
                 new SonarIssue
                 {
-                    Component = "TestProject\\TestClass.cs",
-                    Key = "TORO",
+                    Component = "TestApplication:TestApplication:TestClass.cs",
+                    Key = "TestApplication",
                     Line = 20,
                     Message = "Test message at 20",
                     Rule = "Tag test message",
@@ -38,8 +38,8 @@ namespace Rabobank.SonarCompanion_VSIntegration
                 },
                 new SonarIssue
                 {
-                    Component = "TestProject\\TestClass.cs",
-                    Key = "TORO",
+                    Component = "TestApplication:TestApplication:TestClass.cs",
+                    Key = "TestApplication",
                     Line = 30,
                     Message = "Test message at 30",
                     Rule = "Tag test message",
@@ -47,14 +47,27 @@ namespace Rabobank.SonarCompanion_VSIntegration
                 },
                 new SonarIssue
                 {
-                    Component = "TestProject\\TestClass.cs",
-                    Key = "TORO",
+                    Component = "TestApplication:TestApplication:TestClass.cs",
+                    Key = "TestApplication",
                     Line = 40,
                     Message = "Test message at 40",
                     Rule = "Tag test message",
                     Severity = "Critical"
                 }
             };
+        }
+
+        public List<SonarProject> GetProjects()
+        {
+            return new List<SonarProject>
+            {
+                new SonarProject { id = "1", k = "Test", nm = "Test" }
+            };
+        }
+
+        public IEnumerable<SonarIssue> GetAllIssues(string key, Action<int> updateProgress)
+        {
+            return GetIssuesForFile("foo");
         }
     }
 }

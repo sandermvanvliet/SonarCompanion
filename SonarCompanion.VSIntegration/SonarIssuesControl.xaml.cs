@@ -25,15 +25,12 @@ namespace Rabobank.SonarCompanion_VSIntegration
         /// </summary>
         private readonly DTE _dte;
 
+        private readonly ISonarIssuesService _sonarIssuesService;
+
         private bool _initialized;
 
         private List<Project> _projectInSolution;
         private OptionPageGrid _properties;
-
-        /// <summary>
-        ///     The _sonar service.
-        /// </summary>
-        private SonarService _sonarService;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="SonarIssuesControl" /> class.
@@ -41,14 +38,15 @@ namespace Rabobank.SonarCompanion_VSIntegration
         /// <param name="dte">
         ///     The dte.
         /// </param>
-        public SonarIssuesControl(DTE dte)
+        /// <param name="sonarIssuesService"></param>
+        public SonarIssuesControl(DTE dte, ISonarIssuesService sonarIssuesService)
         {
             _dte = dte;
+            _sonarIssuesService = sonarIssuesService;
+
             InitializeComponent();
 
             LoadOptions();
-
-            _sonarService = new SonarService(new Uri(_properties.SonarUrl));
         }
 
         private void LoadOptions()
@@ -124,17 +122,17 @@ namespace Rabobank.SonarCompanion_VSIntegration
 
             LoadOptions();
 
-            if (!string.Equals(_properties.SonarUrl, _sonarService.Url))
-            {
-                _sonarService = new SonarService(new Uri(_properties.SonarUrl));
+            //if (!string.Equals(_properties.SonarUrl, _sonarService.Url))
+            //{
+            //    _sonarService = new SonarService(new Uri(_properties.SonarUrl));
 
-                InitializeProjects();
-            }
+            //    InitializeProjects();
+            //}
         }
 
         private void InitializeProjects()
         {
-            List<SonarProject> projects = _sonarService.GetProjects();
+            List<SonarProject> projects = _sonarIssuesService.GetProjects();
 
             SetSafely(ProjectsComboBox, c =>
             {
@@ -177,6 +175,11 @@ namespace Rabobank.SonarCompanion_VSIntegration
 
             Project project = _projectInSolution.SingleOrDefault(p => p.Name == item.Project);
 
+            if (project == null)
+            {
+                return;
+            }
+
             string projectPath = Path.GetDirectoryName(project.FileName);
 
             string fileName = Path.Combine(projectPath, item.FileName);
@@ -210,7 +213,7 @@ namespace Rabobank.SonarCompanion_VSIntegration
 
             Task.Run(() =>
             {
-                IEnumerable<IssueListViewItem> issues = _sonarService
+                IEnumerable<IssueListViewItem> issues = _sonarIssuesService
                     .GetAllIssues(selectedProject.Key, UpdateProgress)
                     .Select(i => new IssueListViewItem(i));
 

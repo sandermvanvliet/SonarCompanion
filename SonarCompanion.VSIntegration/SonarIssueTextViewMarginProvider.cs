@@ -20,9 +20,9 @@ namespace Rabobank.SonarCompanion_VSIntegration
         private readonly IScrollMapFactoryService _scrollMapFactoryService;
 
         [ImportingConstructor]
-        public SonarIssueTextViewMarginProvider(ISonarIssuesService sonarIssuesService, IScrollMapFactoryService scrollMapFactoryService)
+        public SonarIssueTextViewMarginProvider(SonarIssuesServiceFactory sonarIssuesServiceFactory, IScrollMapFactoryService scrollMapFactoryService)
         {
-            _sonarIssuesService = sonarIssuesService;
+            _sonarIssuesService = sonarIssuesServiceFactory.Create();
             _scrollMapFactoryService = scrollMapFactoryService;
         }
 

@@ -27,7 +27,7 @@ namespace Rabobank.SonarCompanion_VSIntegration
     [ProvideMenuResource("Menus.ctmenu", 1)]
 
     // This attribute registers a tool window exposed by this package.
-    [ProvideToolWindow(typeof(MyToolWindow))]
+    [ProvideToolWindow(typeof(SonarIssuesToolWindow))]
     [Guid(GuidList.guidSonarCompanion_VSIntegrationPkgString)]
     [ProvideOptionPage(typeof(OptionPageGrid), "Sonar Companion", "General", 0, 0, true)]
     public sealed class SonarCompanion_VSIntegrationPackage : Package
@@ -48,7 +48,7 @@ namespace Rabobank.SonarCompanion_VSIntegration
             // Get the instance number 0 of this tool window. This window is single instance so this instance
             // is actually the only one.
             // The last flag is set to true so that if the tool window does not exists it will be created.
-            var window = FindToolWindow(typeof(MyToolWindow), 0, true);
+            var window = FindToolWindow(typeof(SonarIssuesToolWindow), 0, true);
             if ((null == window) || (null == window.Frame))
             {
                 throw new NotSupportedException(Resources.CanNotCreateWindow);
