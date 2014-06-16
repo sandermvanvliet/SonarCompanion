@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Composition;
+using Rabobank.SonarCompanion_VSIntegration.Services;
 
 namespace Rabobank.SonarCompanion_VSIntegration
 {
@@ -7,9 +8,7 @@ namespace Rabobank.SonarCompanion_VSIntegration
     {
         public ISonarIssuesService Create()
         {
-#if DEBUG
             return new DummySonarIssuesService();
-#endif
         }
     }
 }

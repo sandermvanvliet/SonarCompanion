@@ -2,62 +2,51 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using EnvDTE;
-using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
+using Rabobank.SonarCompanion_VSIntegration.Services;
 using SonarCompanion.API;
-using Constants = EnvDTE.Constants;
-using Task = System.Threading.Tasks.Task;
-using Window = EnvDTE.Window;
 
 namespace Rabobank.SonarCompanion_VSIntegration
 {
     /// <summary>
     ///     Interaction logic for SonarIssuesControl.xaml
     /// </summary>
-    public partial class SonarIssuesControl : UserControl
+    public partial class SonarIssuesControl : UserControl, ISonarOptionsEventSink
     {
-        /// <summary>
-        ///     The _dte.
-        /// </summary>
-        private readonly DTE _dte;
-
         private readonly ISonarIssuesService _sonarIssuesService;
+        private readonly ISonarOptionsService _sonarOptionsService;
+        private readonly IVisualStudioAutomationService _visualStudioAutomationService;
 
         private bool _initialized;
 
         private List<Project> _projectInSolution;
-        private OptionPageGrid _properties;
+        private SonarOptionsPage _properties;
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="SonarIssuesControl" /> class.
-        /// </summary>
-        /// <param name="dte">
-        ///     The dte.
-        /// </param>
-        /// <param name="sonarIssuesService"></param>
-        public SonarIssuesControl(DTE dte, ISonarIssuesService sonarIssuesService)
+        public SonarIssuesControl(ISonarIssuesService sonarIssuesService, ISonarOptionsService sonarOptionsService,
+            IVisualStudioAutomationService visualStudioAutomationService)
         {
-            _dte = dte;
             _sonarIssuesService = sonarIssuesService;
+            _sonarOptionsService = sonarOptionsService;
+            _visualStudioAutomationService = visualStudioAutomationService;
+            _sonarOptionsService.Subscribe(this);
 
             InitializeComponent();
 
             LoadOptions();
         }
 
+        public void ReloadOptions()
+        {
+            LoadOptions();
+        }
+
         private void LoadOptions()
         {
-            Properties properties = _dte.Properties["Sonar Companion", "General"];
-
-            _properties = new OptionPageGrid
-            {
-                SonarUrl = (string) properties.Item("SonarUrl").Value,
-                DefaultProject = (string) properties.Item("DefaultProject").Value
-            };
+            _properties = _sonarOptionsService.GetOptions();
         }
 
         /// <summary>
@@ -121,13 +110,6 @@ namespace Rabobank.SonarCompanion_VSIntegration
             }
 
             LoadOptions();
-
-            //if (!string.Equals(_properties.SonarUrl, _sonarService.Url))
-            //{
-            //    _sonarService = new SonarService(new Uri(_properties.SonarUrl));
-
-            //    InitializeProjects();
-            //}
         }
 
         private void InitializeProjects()
@@ -167,10 +149,7 @@ namespace Rabobank.SonarCompanion_VSIntegration
 
             if (_projectInSolution == null || !_projectInSolution.Any())
             {
-                var solutionService = (IVsSolution) Package.GetGlobalService(typeof (IVsSolution));
-                _projectInSolution = VsInteropUtilities.ProjectsInSolution(solutionService)
-                    .Select(p => VsInteropUtilities.GetEnvDTEProject((IVsHierarchy) p))
-                    .ToList();
+                _projectInSolution = _visualStudioAutomationService.GetProjectsInSolution();
             }
 
             Project project = _projectInSolution.SingleOrDefault(p => p.Name == item.Project);
@@ -184,12 +163,7 @@ namespace Rabobank.SonarCompanion_VSIntegration
 
             string fileName = Path.Combine(projectPath, item.FileName);
 
-            Window window = _dte.ItemOperations.OpenFile(fileName, Constants.vsViewKindAny);
-
-            if (window != null)
-            {
-                ((TextSelection) window.Document.Selection).GotoLine(item.Line);
-            }
+            _visualStudioAutomationService.OpenFileAtLine(fileName, item.Line);
         }
 
         private void SetSafely<TControl>(TControl control, Action<TControl> action)

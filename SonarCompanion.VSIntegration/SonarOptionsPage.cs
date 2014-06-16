@@ -7,7 +7,7 @@ namespace Rabobank.SonarCompanion_VSIntegration
 {
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [CLSCompliant(false), ComVisible(true)]
-    public class OptionPageGrid : DialogPage
+    public class SonarOptionsPage : DialogPage
     {
         private string sonarUrl = "http://localhost:9000/";
         private string defaultProject;

@@ -29,7 +29,7 @@ namespace Rabobank.SonarCompanion_VSIntegration
     // This attribute registers a tool window exposed by this package.
     [ProvideToolWindow(typeof(SonarIssuesToolWindow))]
     [Guid(GuidList.guidSonarCompanion_VSIntegrationPkgString)]
-    [ProvideOptionPage(typeof(OptionPageGrid), "Sonar Companion", "General", 0, 0, true)]
+    [ProvideOptionPage(typeof(SonarOptionsPage), "Sonar Companion", "General", 0, 0, true)]
     public sealed class SonarCompanion_VSIntegrationPackage : Package
     {
         /// <summary>

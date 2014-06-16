@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.Linq;
 using SonarCompanion.API;
 
-namespace Rabobank.SonarCompanion_VSIntegration
+namespace Rabobank.SonarCompanion_VSIntegration.Services
 {
     public class DummySonarIssuesService : ISonarIssuesService
     {

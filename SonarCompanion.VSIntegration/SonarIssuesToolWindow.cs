@@ -1,9 +1,7 @@
-﻿using System.ComponentModel.Composition;
-using System.Runtime.InteropServices;
-using EnvDTE;
+﻿using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
+using Rabobank.SonarCompanion_VSIntegration.Services;
 
 namespace Rabobank.SonarCompanion_VSIntegration
 {
@@ -17,14 +15,15 @@ namespace Rabobank.SonarCompanion_VSIntegration
             BitmapResourceID = 301;
             BitmapIndex = 1;
 
-            var componentModel = (IComponentModel)Microsoft.VisualStudio.Shell.Package.
-        GetGlobalService(typeof(SComponentModel));
+            var componentModel = (IComponentModel) Microsoft.VisualStudio.Shell.Package.
+                GetGlobalService(typeof (SComponentModel));
 
             var sonarIssuesServiceFactory = componentModel.GetService<SonarIssuesServiceFactory>();
+            var automationService = componentModel.GetService<IVisualStudioAutomationService>();
+            var sonarOptionsService = componentModel.GetService<ISonarOptionsService>();
 
             base.Content =
-                new SonarIssuesControl(Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof (SDTE)) as DTE,
-                    sonarIssuesServiceFactory.Create());
+                new SonarIssuesControl(sonarIssuesServiceFactory.Create(), sonarOptionsService, automationService);
         }
     }
 }

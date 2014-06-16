@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
 using Rabobank.SonarCompanion_VSIntegration.Margin;
+using Rabobank.SonarCompanion_VSIntegration.Services;
 
 namespace Rabobank.SonarCompanion_VSIntegration
 {
