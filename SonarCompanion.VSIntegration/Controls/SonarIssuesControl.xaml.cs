@@ -10,7 +10,7 @@ using EnvDTE;
 using Rabobank.SonarCompanion_VSIntegration.Services;
 using SonarCompanion.API;
 
-namespace Rabobank.SonarCompanion_VSIntegration
+namespace Rabobank.SonarCompanion_VSIntegration.Controls
 {
     /// <summary>
     ///     Interaction logic for SonarIssuesControl.xaml

@@ -1,11 +1,14 @@
-﻿using System.ComponentModel.Composition;
-using System.Linq;
+﻿using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio.Utilities;
+using Rabobank.SonarCompanion_VSIntegration.Factories;
 using Rabobank.SonarCompanion_VSIntegration.Margin;
 using Rabobank.SonarCompanion_VSIntegration.Services;
+using SonarCompanion.API;
 
 namespace Rabobank.SonarCompanion_VSIntegration
 {
@@ -17,11 +20,12 @@ namespace Rabobank.SonarCompanion_VSIntegration
     [Order(After = PredefinedMarginNames.VerticalScrollBar)]
     public class SonarIssueTextViewMarginProvider : IWpfTextViewMarginProvider
     {
-        private readonly ISonarIssuesService _sonarIssuesService;
         private readonly IScrollMapFactoryService _scrollMapFactoryService;
+        private readonly ISonarIssuesService _sonarIssuesService;
 
         [ImportingConstructor]
-        public SonarIssueTextViewMarginProvider(SonarIssuesServiceFactory sonarIssuesServiceFactory, IScrollMapFactoryService scrollMapFactoryService)
+        public SonarIssueTextViewMarginProvider(SonarIssuesServiceFactory sonarIssuesServiceFactory,
+            IScrollMapFactoryService scrollMapFactoryService)
         {
             _sonarIssuesService = sonarIssuesServiceFactory.Create();
             _scrollMapFactoryService = scrollMapFactoryService;
@@ -29,9 +33,9 @@ namespace Rabobank.SonarCompanion_VSIntegration
 
         public IWpfTextViewMargin CreateMargin(IWpfTextViewHost wpfTextViewHost, IWpfTextViewMargin marginContainer)
         {
-            var fileName = GetFileNameFromTextBuffer(wpfTextViewHost.TextView.TextBuffer);
+            string fileName = GetFileNameFromTextBuffer(wpfTextViewHost.TextView.TextBuffer);
 
-            var issues = _sonarIssuesService.GetIssuesForFile(fileName);
+            IEnumerable<SonarIssue> issues = _sonarIssuesService.GetIssuesForFile(fileName);
 
             return new SonarIssueTextViewMargin(issues, wpfTextViewHost, marginContainer, _scrollMapFactoryService);
         }
@@ -39,7 +43,7 @@ namespace Rabobank.SonarCompanion_VSIntegration
         private string GetFileNameFromTextBuffer(ITextBuffer buffer)
         {
             IPersistFileFormat persistFileFormat;
-            buffer.Properties.TryGetProperty(typeof(Microsoft.VisualStudio.TextManager.Interop.IVsTextBuffer), out persistFileFormat);
+            buffer.Properties.TryGetProperty(typeof (IVsTextBuffer), out persistFileFormat);
 
             if (persistFileFormat == null)
             {
