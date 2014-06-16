@@ -25,9 +25,14 @@ namespace Rabobank.SonarCompanion_VSIntegration.Services
 
         public IEnumerable<SonarIssue> GetIssuesForFile(string fileName)
         {
-            return
+            if(_sonarIssues != null)
+            {
+                return
                 _sonarIssues.Where(
                     issue => string.Equals(issue.FileName, fileName, StringComparison.InvariantCultureIgnoreCase));
+            }
+
+            return new SonarIssue[0];
         }
 
         public List<SonarProject> GetProjects()
