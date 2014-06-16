@@ -148,6 +148,7 @@
     <Compile Include="Margin\SimpleScrollBar.cs" />
     <Compile Include="Margin\SonarIssueTextViewMargin.cs" />
     <Compile Include="Services\IVisualStudioAutomationService.cs" />
+    <Compile Include="Services\SonarIssuesService.cs" />
     <Compile Include="Services\VisualStudioAutomationService.cs" />
     <Compile Include="Factories\SonarIssuesServiceFactory.cs" />
     <Compile Include="SonarIssueTextViewMarginProvider.cs" />
