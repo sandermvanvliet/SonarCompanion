@@ -16,7 +16,8 @@ namespace Rabobank.SonarCompanion_VSIntegration.Factories
 
         public ISonarIssuesService Create()
         {
-            return new SonarIssuesService(_sonarOptionsService);
+            //return new SonarIssuesService(_sonarOptionsService);
+            return new DummySonarIssuesService();
         }
     }
 }

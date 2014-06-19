@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,9 +16,9 @@ namespace Rabobank.SonarCompanion_VSIntegration.Margin
 {
     public class SonarIssueTextViewMargin : Canvas, IWpfTextViewMargin
     {
+        public static readonly Brush GlyphColor = Brushes.Purple;
         private const double GlyphHeight = 2.0;
         private readonly IEnumerable<SonarIssue> _sonarIssues;
-        private readonly IWpfTextViewHost _textViewHost;
         private SimpleScrollBar _scrollBar;
         private readonly EventHandler _scrollBarOnTrackSpanChanged;
 
@@ -25,12 +26,12 @@ namespace Rabobank.SonarCompanion_VSIntegration.Margin
             IWpfTextViewMargin containerMargin, IScrollMapFactoryService scrollMapFactoryService)
         {
             _sonarIssues = sonarIssues;
-            _textViewHost = textViewHost;
 
-            Width =
-                _textViewHost.TextView.Options.GetOptionValue(
-                    DefaultTextViewHostOptions.ChangeTrackingMarginWidthOptionId);
-            
+            Width = textViewHost
+                .TextView
+                .Options
+                .GetOptionValue(DefaultTextViewHostOptions.ChangeTrackingMarginWidthOptionId);
+
             _scrollBar = new SimpleScrollBar(textViewHost, containerMargin, this, scrollMapFactoryService);
             
             _scrollBarOnTrackSpanChanged = (sender, args) => DrawMargins();
@@ -41,7 +42,6 @@ namespace Rabobank.SonarCompanion_VSIntegration.Margin
         {
             get { return 1.0; }
         }
-
 
         public void Dispose()
         {
@@ -61,7 +61,7 @@ namespace Rabobank.SonarCompanion_VSIntegration.Margin
             get { return ActualHeight; }
         }
 
-        public bool Enabled { get; private set; }
+        public bool Enabled { get { return true; } }
 
         public FrameworkElement VisualElement
         {
@@ -91,25 +91,28 @@ namespace Rabobank.SonarCompanion_VSIntegration.Margin
 
                 var rect = new Rectangle
                 {
-                    Height = GlyphHeight * 2,
+                    Height = GlyphHeight,
                     Width = Width - MarginElementOffset,
                     Focusable = false,
                     IsHitTestVisible = true,
-                    Fill = Brushes.Red,
+                    Fill = GlyphColor,
                     ToolTip = sonarIssue.Message,
-                    Tag = sonarIssue
+                    Tag = sonarIssue,
+                    Cursor = Cursors.Hand
                 };
+                
                 SetLeft(rect, MarginElementOffset);
                 SetTop(rect, top);
-                rect.MouseUp += rect_MouseUp;
+
+                Debug.WriteLine("DrawMargins: top: " + top);
+
+                rect.MouseUp += HandleMouseUp;
 
                 Children.Add(rect);
-
-                ToolTip = sonarIssue.Message;
             }
         }
 
-        private void rect_MouseUp(object sender, MouseButtonEventArgs e)
+        private void HandleMouseUp(object sender, MouseButtonEventArgs e)
         {
             var rect = sender as Rectangle;
 
@@ -129,13 +132,16 @@ namespace Rabobank.SonarCompanion_VSIntegration.Margin
             ITextSnapshotLine snapshotLine =
                 textView.TextSnapshot.Lines.SingleOrDefault(line => line.LineNumber == sonarIssue.Line - 1);
 
-            ITextViewLine textViewLine = textView.GetTextViewLineContainingBufferPosition(snapshotLine.Start);
-
-            if (textViewLine != null)
+            if (snapshotLine != null)
             {
-                _scrollBar.Map.TextView.Caret.MoveTo(textViewLine, snapshotLine.Start.Position);
+                ITextViewLine textViewLine = textView.GetTextViewLineContainingBufferPosition(snapshotLine.Start);
 
-                _scrollBar.Map.TextView.Caret.EnsureVisible();
+                if (textViewLine != null)
+                {
+                    _scrollBar.Map.TextView.Caret.MoveTo(textViewLine, snapshotLine.Start.Position);
+
+                    _scrollBar.Map.TextView.Caret.EnsureVisible();
+                }
             }
         }
     }
