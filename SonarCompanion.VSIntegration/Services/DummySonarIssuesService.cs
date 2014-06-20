@@ -23,7 +23,7 @@ namespace Rabobank.SonarCompanion_VSIntegration.Services
                     Key = "TestApplication",
                     Line = 1,
                     Message = "Test message at 1",
-                    Rule = "Tag test message",
+                    Rule = "Rule 1",
                     Severity = "Critical"
                 },
                 new SonarIssue
@@ -32,7 +32,7 @@ namespace Rabobank.SonarCompanion_VSIntegration.Services
                     Key = "TestApplication",
                     Line = 10,
                     Message = "Test message at 10",
-                    Rule = "Tag test message",
+                    Rule = "Rule 1",
                     Severity = "Critical"
                 },
                 new SonarIssue
@@ -41,7 +41,7 @@ namespace Rabobank.SonarCompanion_VSIntegration.Services
                     Key = "TestApplication",
                     Line = 20,
                     Message = "Test message at 20",
-                    Rule = "Tag test message",
+                    Rule = "Rule 2",
                     Severity = "Critical"
                 },
                 new SonarIssue
@@ -50,7 +50,7 @@ namespace Rabobank.SonarCompanion_VSIntegration.Services
                     Key = "TestApplication",
                     Line = 30,
                     Message = "Test message at 30",
-                    Rule = "Tag test message",
+                    Rule = "Rule 2",
                     Severity = "Critical"
                 },
                 new SonarIssue
@@ -59,16 +59,34 @@ namespace Rabobank.SonarCompanion_VSIntegration.Services
                     Key = "TestApplication",
                     Line = 40,
                     Message = "Test message at 40",
-                    Rule = "Tag test message",
+                    Rule = "Rule 3",
                     Severity = "Critical"
                 },
                 new SonarIssue
                 {
-                    Component = "TestApplication:TestApplication:TestClass.cs",
+                    Component = "TestApplication:AnotherApplication:AnotherClass.cs",
                     Key = "TestApplication",
                     Line = 95,
                     Message = "Test message at 95",
-                    Rule = "Tag test message",
+                    Rule = "Rule 4",
+                    Severity = "Critical"
+                },
+                new SonarIssue
+                {
+                    Component = "TestApplication:AnotherApplication:AnotherClass.cs",
+                    Key = "TestApplication",
+                    Line = 65,
+                    Message = "Test message at 95",
+                    Rule = "Rule 2",
+                    Severity = "Critical"
+                },
+                new SonarIssue
+                {
+                    Component = "TestApplication:AnotherApplication:AnotherClass.cs",
+                    Key = "TestApplication",
+                    Line = 75,
+                    Message = "Test message at 95",
+                    Rule = "Rule 1",
                     Severity = "Critical"
                 },
             };

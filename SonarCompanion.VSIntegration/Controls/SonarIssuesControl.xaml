@@ -3,33 +3,48 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Rabobank.SonarCompanion_VSIntegration.Controls"
              Background="{DynamicResource VsBrush.Window}"
              Foreground="{DynamicResource VsBrush.WindowText}"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300"
+             d:DesignHeight="300"
+             d:DesignWidth="500"
              Name="MyToolWindow" Loaded="HandleOnLoaded">
-    <Grid>
+    <UserControl.Resources>
+        <!--<local:IssuesList x:Key="issues" />
+        <CollectionViewSource x:Key="cvsIssuesList" Source="{StaticResource issues}" 
+                          Filter="CollectionViewSource_Filter">
+        </CollectionViewSource>-->
+    </UserControl.Resources>
+    <Grid Margin="1">
         <Grid.RowDefinitions>
             <RowDefinition Height="28" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        
+
         <Grid Grid.Row="0">
             <ComboBox Name="ProjectsComboBox" Margin="2,2,80,2" 
                       SelectionChanged="ProjectsComboBox_OnSelectionChanged" 
                       DisplayMemberPath="Name" />
             <Button Name="RefreshButton" Content="Refresh" Width="76" HorizontalAlignment="Right" Margin="2" Click="RefreshButton_OnClick" />
         </Grid>
-        <ListView Grid.Row="1" Margin="0" Name="IssuesListView" MouseDoubleClick="IssuesListView_OnMouseDoubleClick">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Project" DisplayMemberBinding="{Binding Path=Project}" Width="80" />
-                    <GridViewColumn Header="File" DisplayMemberBinding="{Binding Path=FileName}" Width="80" />
-                    <GridViewColumn Header="Line" DisplayMemberBinding="{Binding Path=Line}" Width="40" />
-                    <GridViewColumn Header="Message" DisplayMemberBinding="{Binding Path=Message}" Width="Auto" />
-                </GridView>
-            </ListView.View>
-        </ListView>
+        <DataGrid Grid.Row="1" Margin="2,0,1,2" Name="IssuesGrid" MouseDoubleClick="IssuesGrid_OnMouseDoubleClick"
+                  AutoGenerateColumns="False" SelectionMode="Single" GridLinesVisibility="None" Background="White"
+                  IsReadOnly="True" CanUserResizeRows="False" RowHeaderWidth="0">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Project" Binding="{Binding Path=Project}" CanUserReorder="True" CanUserResize="True" CanUserSort="True" Width="150" />
+                <DataGridTextColumn Header="File" Binding="{Binding Path=FileName}" CanUserReorder="True" CanUserResize="True" CanUserSort="True" Width="150" />
+                <DataGridTextColumn Header="Severity" Binding="{Binding Path=Severity}" CanUserReorder="True" CanUserResize="True" CanUserSort="True" Width="60" />
+                <DataGridTextColumn Header="Line" Binding="{Binding Path=Line}" CanUserReorder="True" CanUserResize="True" CanUserSort="True" Width="40">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextAlignment" Value="Right" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Message" Binding="{Binding Path=Message}" CanUserReorder="True" CanUserResize="True" CanUserSort="True" Width="*" />
+            </DataGrid.Columns>
+        </DataGrid>
         <Grid Grid.Row="1" Background="White" Name="ProgressIndicator" Visibility="Collapsed">
             <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,44">Loading issues...</TextBlock>
             <ProgressBar Name="IssueLoadProgressBar" Margin="8,0,8,0" Height="24" VerticalAlignment="Center" Minimum="0" Maximum="100" />

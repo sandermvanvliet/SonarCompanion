@@ -32,6 +32,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CopyVsixExtensionFiles>False</CopyVsixExtensionFiles>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -142,6 +143,7 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\IssuesList.cs" />
     <Compile Include="Services\ISonarIssuesService.cs" />
     <Compile Include="ISonarOptionsEventSink.cs" />
     <Compile Include="Services\ISonarOptionsService.cs" />

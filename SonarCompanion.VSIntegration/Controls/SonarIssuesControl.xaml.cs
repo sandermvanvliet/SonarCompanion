@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using EnvDTE;
 using Rabobank.SonarCompanion_VSIntegration.Services;
@@ -26,7 +28,9 @@ namespace Rabobank.SonarCompanion_VSIntegration.Controls
         private List<Project> _projectInSolution;
         private SonarOptionsPage _properties;
 
-        public SonarIssuesControl(ISonarIssuesService sonarIssuesService, ISonarOptionsService sonarOptionsService,
+        public SonarIssuesControl(
+            ISonarIssuesService sonarIssuesService,
+            ISonarOptionsService sonarOptionsService,
             IVisualStudioAutomationService visualStudioAutomationService)
         {
             _sonarIssuesService = sonarIssuesService;
@@ -87,7 +91,7 @@ namespace Rabobank.SonarCompanion_VSIntegration.Controls
                 return;
             }
 
-            var selectedProject = (SonarProject) e.AddedItems[0];
+            var selectedProject = (SonarProject)e.AddedItems[0];
 
             LoadIssuesForAsync(selectedProject);
         }
@@ -114,12 +118,12 @@ namespace Rabobank.SonarCompanion_VSIntegration.Controls
 
         private void InitializeProjects()
         {
-            List<SonarProject> projects = _sonarIssuesService.GetProjects();
+            var projects = _sonarIssuesService.GetProjects();
 
             SetSafely(ProjectsComboBox, c =>
             {
                 // Reset list of issues (might have changed)
-                IssuesListView.ItemsSource = null;
+                IssuesGrid.ItemsSource = null;
 
                 c.ItemsSource = projects;
                 if (projects != null)
@@ -129,41 +133,37 @@ namespace Rabobank.SonarCompanion_VSIntegration.Controls
             });
         }
 
-        /// <summary>
-        ///     The issues list view_ on mouse double click.
-        /// </summary>
-        /// <param name="sender">
-        ///     The sender.
-        /// </param>
-        /// <param name="e">
-        ///     The e.
-        /// </param>
-        private void IssuesListView_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void IssuesGrid_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var item = ((ListView) sender).SelectedItem as IssueListViewItem;
+            var item = ((DataGrid)sender).SelectedItem as IssueListViewItem;
 
             if (item == null)
             {
                 return;
             }
 
+            OpenFileAtLine(item.Project, item.FileName, item.Line);
+        }
+
+        private void OpenFileAtLine(string projectName, string fileName, int lineNumber)
+        {
             if (_projectInSolution == null || !_projectInSolution.Any())
             {
                 _projectInSolution = _visualStudioAutomationService.GetProjectsInSolution();
             }
 
-            Project project = _projectInSolution.SingleOrDefault(p => p.Name == item.Project);
+            var project = _projectInSolution.SingleOrDefault(p => p.Name == projectName);
 
             if (project == null)
             {
                 return;
             }
 
-            string projectPath = Path.GetDirectoryName(project.FileName);
+            var projectPath = Path.GetDirectoryName(project.FileName);
 
-            string fileName = Path.Combine(projectPath, item.FileName);
+            var path = Path.Combine(projectPath, fileName);
 
-            _visualStudioAutomationService.OpenFileAtLine(fileName, item.Line);
+            _visualStudioAutomationService.OpenFileAtLine(path, lineNumber);
         }
 
         private void SetSafely<TControl>(TControl control, Action<TControl> action)
@@ -182,19 +182,23 @@ namespace Rabobank.SonarCompanion_VSIntegration.Controls
         private void LoadIssuesForAsync(SonarProject selectedProject)
         {
             ProgressIndicator.Visibility = Visibility.Visible;
-            IssuesListView.Visibility = Visibility.Collapsed;
+            IssuesGrid.Visibility = Visibility.Collapsed;
             SetSafely(IssueLoadProgressBar, pb => pb.Value = 0);
 
             Task.Run(() =>
             {
-                IEnumerable<IssueListViewItem> issues = _sonarIssuesService
+                var issues = _sonarIssuesService
                     .GetAllIssues(selectedProject.Key, UpdateProgress)
-                    .Select(i => new IssueListViewItem(i));
+                    .Select(i => new IssueListViewItem(i))
+                    .OrderBy(i => i.Project)
+                    .ThenBy(i => i.FileName)
+                    .ThenBy(i => i.Line)
+                    .ToList();
 
-                SetSafely(IssuesListView, i => i.ItemsSource = issues);
+                SetSafely(IssuesGrid, i => i.ItemsSource = issues);
 
                 SetSafely(ProgressIndicator, p => { p.Visibility = Visibility.Collapsed; });
-                SetSafely(IssuesListView, l => { l.Visibility = Visibility.Visible; });
+                SetSafely(IssuesGrid, l => { l.Visibility = Visibility.Visible; });
             });
         }
 
