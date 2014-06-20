@@ -1,4 +1,4 @@
-﻿namespace Rabobank.SonarCompanion_VSIntegration
+﻿namespace SonarCompanion_VSIntegration
 {
     public interface ISonarOptionsEventSink
     {

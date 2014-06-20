@@ -5,12 +5,12 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio.Utilities;
-using Rabobank.SonarCompanion_VSIntegration.Factories;
-using Rabobank.SonarCompanion_VSIntegration.Margin;
-using Rabobank.SonarCompanion_VSIntegration.Services;
 using SonarCompanion.API;
+using SonarCompanion_VSIntegration.Factories;
+using SonarCompanion_VSIntegration.Margin;
+using SonarCompanion_VSIntegration.Services;
 
-namespace Rabobank.SonarCompanion_VSIntegration
+namespace SonarCompanion_VSIntegration
 {
     [Export(typeof (IWpfTextViewMarginProvider))]
     [Name("SonarIssueMargin")]

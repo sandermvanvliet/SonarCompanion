@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 using EnvDTE;
-using Rabobank.SonarCompanion_VSIntegration.Services;
 using SonarCompanion.API;
+using SonarCompanion_VSIntegration.Services;
 
-namespace Rabobank.SonarCompanion_VSIntegration.Controls
+namespace SonarCompanion_VSIntegration.Controls
 {
     /// <summary>
     ///     Interaction logic for SonarIssuesControl.xaml

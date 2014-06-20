@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using EnvDTE;
 
-namespace Rabobank.SonarCompanion_VSIntegration.Services
+namespace SonarCompanion_VSIntegration.Services
 {
     public interface IVisualStudioAutomationService
     {

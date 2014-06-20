@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Constants = EnvDTE.Constants;
 
-namespace Rabobank.SonarCompanion_VSIntegration.Services
+namespace SonarCompanion_VSIntegration.Services
 {
     [Export(typeof (IVisualStudioAutomationService))]
     public class VisualStudioAutomationService : IVisualStudioAutomationService

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using SonarCompanion.API;
 
-namespace Rabobank.SonarCompanion_VSIntegration.Services
+namespace SonarCompanion_VSIntegration.Services
 {
     public interface ISonarIssuesService
     {

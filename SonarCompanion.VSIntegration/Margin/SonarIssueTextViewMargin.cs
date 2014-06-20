@@ -12,7 +12,7 @@ using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Formatting;
 using SonarCompanion.API;
 
-namespace Rabobank.SonarCompanion_VSIntegration.Margin
+namespace SonarCompanion_VSIntegration.Margin
 {
     public class SonarIssueTextViewMargin : Canvas, IWpfTextViewMargin
     {

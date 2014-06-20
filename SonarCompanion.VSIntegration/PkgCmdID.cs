@@ -1,8 +1,7 @@
 ﻿// PkgCmdID.cs
 // MUST match PkgCmdID.h
-using System;
 
-namespace Rabobank.SonarCompanion_VSIntegration
+namespace SonarCompanion_VSIntegration
 {
     static class PkgCmdIDList
     {

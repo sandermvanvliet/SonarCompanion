@@ -8,7 +8,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -20,7 +19,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using VSLangProj80;
 
-namespace Rabobank.SonarCompanion_VSIntegration
+namespace SonarCompanion_VSIntegration
 {
     /// <summary>
     /// The vs interop utilities.

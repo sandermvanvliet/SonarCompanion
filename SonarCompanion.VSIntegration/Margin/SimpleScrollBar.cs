@@ -3,7 +3,7 @@ using System.Windows;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 
-namespace Rabobank.SonarCompanion_VSIntegration.Margin
+namespace SonarCompanion_VSIntegration.Margin
 {
     public class SimpleScrollBar : IVerticalScrollBar
     {

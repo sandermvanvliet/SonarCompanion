@@ -2,7 +2,7 @@
 using System.ComponentModel.Composition;
 using EnvDTE;
 
-namespace Rabobank.SonarCompanion_VSIntegration.Services
+namespace SonarCompanion_VSIntegration.Services
 {
     [Export(typeof (ISonarOptionsService))]
     public class SonarOptionsService : ISonarOptionsService

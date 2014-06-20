@@ -1,4 +1,4 @@
-﻿namespace Rabobank.SonarCompanion_VSIntegration.Services
+﻿namespace SonarCompanion_VSIntegration.Services
 {
     public interface ISonarOptionsService
     {

@@ -4,9 +4,9 @@ using System.Runtime.InteropServices;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using Rabobank.SonarCompanion_VSIntegration.Controls;
+using SonarCompanion_VSIntegration.Controls;
 
-namespace Rabobank.SonarCompanion_VSIntegration
+namespace SonarCompanion_VSIntegration
 {
     /// <summary>
     ///     This is the class that implements the package exposed by this assembly.

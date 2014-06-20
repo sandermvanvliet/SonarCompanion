@@ -1,6 +1,6 @@
 ﻿using SonarCompanion.API;
 
-namespace Rabobank.SonarCompanion_VSIntegration
+namespace SonarCompanion_VSIntegration
 {
     /// <summary>
     /// The issue list view item.

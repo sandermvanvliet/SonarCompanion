@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SonarCompanion.API;
 
-namespace Rabobank.SonarCompanion_VSIntegration.Services
+namespace SonarCompanion_VSIntegration.Services
 {
     public class SonarIssuesService : ISonarIssuesService
     {

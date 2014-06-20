@@ -1,10 +1,10 @@
 ﻿using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
-using Rabobank.SonarCompanion_VSIntegration.Factories;
-using Rabobank.SonarCompanion_VSIntegration.Services;
+using SonarCompanion_VSIntegration.Factories;
+using SonarCompanion_VSIntegration.Services;
 
-namespace Rabobank.SonarCompanion_VSIntegration.Controls
+namespace SonarCompanion_VSIntegration.Controls
 {
     [Guid("70bd26a2-c867-4f03-b1a3-b60814283b2b")]
     public class SonarIssuesToolWindow : ToolWindowPane
