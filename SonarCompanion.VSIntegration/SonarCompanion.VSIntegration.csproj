@@ -179,6 +179,7 @@
     <Compile Include="PkgCmdID.cs" />
     <Compile Include="Services\DummySonarIssuesService.cs" />
     <Compile Include="Services\SonarOptionsService.cs" />
+    <Compile Include="ViewModel\SonarIssuesControlViewModel.cs" />
     <Compile Include="VsInteropUtilities.cs" />
   </ItemGroup>
   <ItemGroup>

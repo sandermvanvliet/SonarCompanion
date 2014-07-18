@@ -16,8 +16,8 @@ namespace SonarCompanion_VSIntegration.Controls
             BitmapResourceID = 301;
             BitmapIndex = 1;
 
-            var componentModel = (IComponentModel) Microsoft.VisualStudio.Shell.Package.
-                GetGlobalService(typeof (SComponentModel));
+            var componentModel = (IComponentModel)Microsoft.VisualStudio.Shell.Package.
+                GetGlobalService(typeof(SComponentModel));
 
             var sonarIssuesServiceFactory = componentModel.GetService<SonarIssuesServiceFactory>();
             var automationService = componentModel.GetService<IVisualStudioAutomationService>();

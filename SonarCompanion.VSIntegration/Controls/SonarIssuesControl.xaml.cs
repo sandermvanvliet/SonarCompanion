@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using EnvDTE;
+using Microsoft.VisualStudio.Shell;
 using SonarCompanion.API;
 using SonarCompanion_VSIntegration.Services;
+using SonarCompanion_VSIntegration.ViewModel;
+using Task = System.Threading.Tasks.Task;
 
 namespace SonarCompanion_VSIntegration.Controls
 {

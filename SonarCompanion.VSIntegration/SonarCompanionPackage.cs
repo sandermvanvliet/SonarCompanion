@@ -71,7 +71,9 @@ namespace SonarCompanion_VSIntegration
         {
             log4net.Config.XmlConfigurator.ConfigureAndWatch(new FileInfo("log4net.config"));
             log.Info("Initializing Sonar Companion.");
-            
+
+            AppDomain.CurrentDomain.UnhandledException += HandleUnhandledException;
+
             base.Initialize();
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
@@ -91,6 +93,11 @@ namespace SonarCompanion_VSIntegration
                 var menuToolWin = new MenuCommand(ShowToolWindow, toolwndCommandId);
                 mcs.AddCommand(menuToolWin);
             }
+        }
+
+        private void HandleUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            log.Error(e.ExceptionObject);
         }
     }
 }
