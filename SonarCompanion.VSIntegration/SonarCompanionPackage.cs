@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Design;
+using System.IO;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
@@ -34,6 +35,8 @@ namespace SonarCompanion_VSIntegration
     [ProvideOptionPage(typeof (SonarOptionsPage), "Sonar Companion", "General", 0, 0, true)]
     public sealed class SonarCompanionPackage : Package
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         /// <summary>
         ///     This function is called when the user clicks the menu item that shows the
         ///     tool window. See the Initialize method to see how the menu item is associated to
@@ -66,6 +69,9 @@ namespace SonarCompanion_VSIntegration
         /// </summary>
         protected override void Initialize()
         {
+            log4net.Config.XmlConfigurator.ConfigureAndWatch(new FileInfo("log4net.config"));
+            log.Info("Initializing Sonar Companion.");
+            
             base.Initialize();
 
             // Add our command handlers for menu (commands must exist in the .vsct file)

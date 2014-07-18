@@ -37,13 +37,13 @@ namespace SonarCompanion.Console
 
             var sonarResources = service.GetResources();
             
-            var marketRiskResource = sonarResources.Single(r => r.Name == "MarketRisk.TORO");
+            var marketRiskResource = sonarResources.Single(r => r.Name == "RiskEngines.LEA2");
 
             var issues = service.GetAllIssues(marketRiskResource.Key);
 
             foreach (var issue in issues)
             {
-                System.Console.WriteLine("[" + issue.Component + "] " + issue.Message);
+                System.Console.WriteLine("[{0}] {1} - {1}", issue.Component, issue.Severity, issue.Message);
             }
 
             System.Console.WriteLine("Done. Press enter to exit");
