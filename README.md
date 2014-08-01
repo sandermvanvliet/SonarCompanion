@@ -14,3 +14,4 @@ The extension can be downloaded from the Visual Studio Gallery [here](http://vis
 
 ### Contributors
 - Sander van Vliet [@SanderMvanVliet](http://twitter.com/SanderMvanVliet)
+- Bjorn Kuiper [SouthernSun](https://github.com/southernsun)
