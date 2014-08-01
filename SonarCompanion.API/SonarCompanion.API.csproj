@@ -59,7 +59,9 @@
     <Compile Include="SonarIssueList.cs" />
     <Compile Include="SonarProject.cs" />
     <Compile Include="SonarResource.cs" />
+    <Compile Include="SonarRule.cs" />
     <Compile Include="SonarService.cs" />
+    <Compile Include="SonarIssueTechnicalDebt.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Key.snk" />

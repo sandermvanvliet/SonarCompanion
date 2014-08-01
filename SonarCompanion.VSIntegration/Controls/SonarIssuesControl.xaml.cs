@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using EnvDTE;
+using Microsoft.VisualStudio.Shell;
 using SonarCompanion.API;
 using SonarCompanion_VSIntegration.Services;
+using SonarCompanion_VSIntegration.ViewModel;
+using Task = System.Threading.Tasks.Task;
 
 namespace SonarCompanion_VSIntegration.Controls
 {
@@ -17,6 +20,8 @@ namespace SonarCompanion_VSIntegration.Controls
     /// </summary>
     public partial class SonarIssuesControl : UserControl, ISonarOptionsEventSink
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private readonly ISonarIssuesService _sonarIssuesService;
         private readonly ISonarOptionsService _sonarOptionsService;
         private readonly IVisualStudioAutomationService _visualStudioAutomationService;
@@ -154,12 +159,24 @@ namespace SonarCompanion_VSIntegration.Controls
 
             if (project == null)
             {
+                log.ErrorFormat("Unable to find project: {0}", projectName);
                 return;
             }
 
             var projectPath = Path.GetDirectoryName(project.FileName);
 
+            if (projectPath == null)
+            {
+                log.ErrorFormat("Unable to determine path for file: {0}", project.FileName);
+                return;
+            }
+
             var path = Path.Combine(projectPath, fileName);
+
+            if (!File.Exists(path))
+            {
+                log.ErrorFormat("File not found: {0}", path);
+            }
 
             _visualStudioAutomationService.OpenFileAtLine(path, lineNumber);
         }
@@ -188,7 +205,8 @@ namespace SonarCompanion_VSIntegration.Controls
                 var issues = _sonarIssuesService
                     .GetAllIssues(selectedProject.Key, UpdateProgress)
                     .Select(i => new IssueListViewItem(i))
-                    .OrderBy(i => i.Project)
+                    .OrderByDescending(i => i.Severity)
+                    .ThenBy(i => i.Project)
                     .ThenBy(i => i.FileName)
                     .ThenBy(i => i.Line)
                     .ToList();

@@ -8,5 +8,6 @@ namespace SonarCompanion.API
         public Paging Paging { get; set; }
         public List<SonarIssue> Issues { get; set; }
         public List<SonarComponent> Components { get; set; }
+        public List<SonarRule> Rules { get; set; }
     }
 }

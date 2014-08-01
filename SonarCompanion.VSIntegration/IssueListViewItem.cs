@@ -20,21 +20,31 @@ namespace SonarCompanion_VSIntegration
             var parts = issue.Component.Split(':');
 
             Project = parts[1].Trim();
+
+            FileName = issue.FileName;
+
+            string folder = string.Empty;
+
             if (parts.Length >= 3)
             {
-                FileName = parts[2].Trim().Replace("/", "\\");
+                folder = parts[2].Replace(FileName, string.Empty).TrimEnd(new char[] { '/' });
             }
+
+            Folder = folder;
+
             Line = issue.Line;
             Message = issue.Message;
             Severity = issue.Severity;
         }
 
-        public string Severity { get; private set; }
+        public Severity Severity { get; private set; }
 
         /// <summary>
         ///     Gets the project.
         /// </summary>
         public string Project { get; private set; }
+
+        public string Folder { get; private set; }
 
         /// <summary>
         ///     Gets the file name.

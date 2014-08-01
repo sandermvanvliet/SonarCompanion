@@ -24,7 +24,7 @@ namespace SonarCompanion_VSIntegration.Services
                     Line = 1,
                     Message = "Test message at 1",
                     Rule = "Rule 1",
-                    Severity = "Critical"
+                    Severity = Severity.Critical
                 },
                 new SonarIssue
                 {
@@ -33,7 +33,7 @@ namespace SonarCompanion_VSIntegration.Services
                     Line = 10,
                     Message = "Test message at 10",
                     Rule = "Rule 1",
-                    Severity = "Critical"
+                    Severity = Severity.Critical
                 },
                 new SonarIssue
                 {
@@ -42,7 +42,7 @@ namespace SonarCompanion_VSIntegration.Services
                     Line = 20,
                     Message = "Test message at 20",
                     Rule = "Rule 2",
-                    Severity = "Critical"
+                    Severity = Severity.Critical
                 },
                 new SonarIssue
                 {
@@ -51,7 +51,7 @@ namespace SonarCompanion_VSIntegration.Services
                     Line = 30,
                     Message = "Test message at 30",
                     Rule = "Rule 2",
-                    Severity = "Critical"
+                    Severity = Severity.Critical
                 },
                 new SonarIssue
                 {
@@ -60,7 +60,7 @@ namespace SonarCompanion_VSIntegration.Services
                     Line = 40,
                     Message = "Test message at 40",
                     Rule = "Rule 3",
-                    Severity = "Critical"
+                    Severity = Severity.Critical
                 },
                 new SonarIssue
                 {
@@ -69,7 +69,7 @@ namespace SonarCompanion_VSIntegration.Services
                     Line = 95,
                     Message = "Test message at 95",
                     Rule = "Rule 4",
-                    Severity = "Critical"
+                    Severity = Severity.Critical
                 },
                 new SonarIssue
                 {
@@ -78,7 +78,7 @@ namespace SonarCompanion_VSIntegration.Services
                     Line = 65,
                     Message = "Test message at 95",
                     Rule = "Rule 2",
-                    Severity = "Critical"
+                    Severity = Severity.Critical
                 },
                 new SonarIssue
                 {
@@ -87,7 +87,7 @@ namespace SonarCompanion_VSIntegration.Services
                     Line = 75,
                     Message = "Test message at 95",
                     Rule = "Rule 1",
-                    Severity = "Critical"
+                    Severity = Severity.Critical
                 },
             };
         }
