@@ -10,9 +10,9 @@ namespace SonarCompanion_VSIntegration.Services
         private readonly SonarService _sonarService;
         private List<SonarIssue> _sonarIssues;
 
-        public SonarIssuesService(ISonarOptionsService sonarOptionsService)
+        public SonarIssuesService()
         {
-            var sonarUri = new Uri(sonarOptionsService.GetOptions().SonarUrl);
+            var sonarUri = new Uri("http://tempuri.org/");
 
             _sonarService = new SonarService(sonarUri);
         }

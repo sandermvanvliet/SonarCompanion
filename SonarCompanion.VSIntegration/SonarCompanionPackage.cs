@@ -3,9 +3,12 @@ using System.ComponentModel.Design;
 using System.IO;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using SonarCompanion_VSIntegration.Controls;
+using SonarCompanion_VSIntegration.Interop;
+using SonarCompanion_VSIntegration.Messagebus;
 
 namespace SonarCompanion_VSIntegration
 {
@@ -36,6 +39,7 @@ namespace SonarCompanion_VSIntegration
     public sealed class SonarCompanionPackage : Package
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private SolutionEventsSink solutionEventsSink;
 
         /// <summary>
         ///     This function is called when the user clicks the menu item that shows the
@@ -76,6 +80,13 @@ namespace SonarCompanion_VSIntegration
 
             base.Initialize();
 
+            var componentModel = GetService(typeof (SComponentModel)) as IComponentModel;
+
+            var messageBus = componentModel.GetService<IMessageBus>();
+
+            solutionEventsSink = new SolutionEventsSink(messageBus, GetService(typeof(SVsSolution)) as IVsSolution);
+
+            
             // Add our command handlers for menu (commands must exist in the .vsct file)
             var mcs = GetService(typeof (IMenuCommandService)) as OleMenuCommandService;
 
@@ -92,6 +103,17 @@ namespace SonarCompanion_VSIntegration
                     (int) PkgCmdIDList.cmdidSonarIssuesToolWindow);
                 var menuToolWin = new MenuCommand(ShowToolWindow, toolwndCommandId);
                 mcs.AddCommand(menuToolWin);
+            }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            if (solutionEventsSink != null)
+            {
+                solutionEventsSink.Dispose();
+                solutionEventsSink = null;
             }
         }
 
