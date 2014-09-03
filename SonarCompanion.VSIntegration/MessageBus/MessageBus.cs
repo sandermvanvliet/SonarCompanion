@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -9,6 +10,8 @@ namespace SonarCompanion_VSIntegration.Messagebus
 {
     public interface IMessageBus
     {
+        void Subscribe(IHandler handler);
+        void Unsubscribe(IHandler handler);
         void Subscribe<TMessage>(IHandler<TMessage> handler) where TMessage : Message;
         void Unsubscribe<TMessage>(IHandler<TMessage> handler) where TMessage : Message;
         void Push<TMessage>(TMessage item) where TMessage : Message;
@@ -25,6 +28,25 @@ namespace SonarCompanion_VSIntegration.Messagebus
         {
             _registrations = new List<IHandler>();
             _queue = new Queue<Message>();
+        }
+
+        public void Subscribe(IHandler handler)
+        {
+            if (handler
+                .GetType()
+                .GetInterfaces()
+                .Any(i => i.IsAssignableFrom(typeof (IHandler<>))))
+            {
+                _registrations.Add(handler);
+            }
+        }
+
+        public void Unsubscribe(IHandler handler)
+        {
+            if (_registrations.Contains(handler))
+            {
+                _registrations.Remove(handler);
+            }
         }
 
         public void Subscribe<TMessage>(IHandler<TMessage> handler) where TMessage : Message

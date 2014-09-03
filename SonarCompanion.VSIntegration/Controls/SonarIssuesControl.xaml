@@ -6,8 +6,7 @@
              xmlns:vm="clr-namespace:SonarCompanion_VSIntegration.ViewModel"
              mc:Ignorable="d"
              d:DesignHeight="300"
-             d:DesignWidth="500"
-             Loaded="HandleOnLoaded">
+             d:DesignWidth="500">
     <UserControl.DataContext>
         <vm:SonarIssuesControlViewModel />
     </UserControl.DataContext>

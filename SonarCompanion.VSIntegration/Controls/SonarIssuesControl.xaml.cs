@@ -21,7 +21,6 @@ namespace SonarCompanion_VSIntegration.Controls
         private readonly IMessageBus _messageBus;
         private readonly ISonarIssuesService _sonarIssuesService;
 
-        private bool _initialized;
         private string _defaultProjectName;
 
         public SonarIssuesControl(
@@ -30,8 +29,8 @@ namespace SonarCompanion_VSIntegration.Controls
         {
             _sonarIssuesService = sonarIssuesService;
             _messageBus = messageBus;
-            _messageBus.Subscribe<SolutionLoaded>(this);
-            _messageBus.Subscribe<SonarProjectsAvailable>(this);
+            
+            _messageBus.Subscribe(this);
 
             InitializeComponent();
         }
@@ -77,23 +76,6 @@ namespace SonarCompanion_VSIntegration.Controls
             var selectedProject = (SonarProject) e.AddedItems[0];
 
             LoadIssuesForAsync(selectedProject);
-        }
-
-        /// <summary>
-        ///     The my control_ on loaded.
-        /// </summary>
-        /// <param name="sender">
-        ///     The sender.
-        /// </param>
-        /// <param name="e">
-        ///     The e.
-        /// </param>
-        private void HandleOnLoaded(object sender, RoutedEventArgs e)
-        {
-            if (!_initialized)
-            {
-                _initialized = true;
-            }
         }
 
         private void IssuesGrid_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
