@@ -68,6 +68,8 @@ namespace SonarCompanion_VSIntegration.Messagebus
                     methodToInvoke.Invoke(handler, new object[] { item });
                 }
             }
+
+            _notifyTask = null;
         }
     }
 }

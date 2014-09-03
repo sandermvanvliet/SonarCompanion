@@ -149,6 +149,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controls\IssuesList.cs" />
+    <Compile Include="Factories\SonarIssuesServiceFactory.cs" />
     <Compile Include="Interop\SolutionEventsSink.cs" />
     <Compile Include="MessageBus\Message.cs" />
     <Compile Include="MessageBus\MessageBus.cs" />
@@ -157,13 +158,14 @@
     <Compile Include="MessageBus\Messages\NavigateToSource.cs" />
     <Compile Include="MessageBus\Messages\SettingChanged.cs" />
     <Compile Include="MessageBus\Messages\SolutionLoaded.cs" />
+    <Compile Include="MessageBus\Messages\SonarProjectsAvailable.cs" />
+    <Compile Include="MessageBus\Messages\SonarProjectsRequested.cs" />
     <Compile Include="Services\ISonarIssuesService.cs" />
     <Compile Include="Margin\SimpleScrollBar.cs" />
     <Compile Include="Margin\SonarIssueTextViewMargin.cs" />
     <Compile Include="Services\IVisualStudioAutomationService.cs" />
     <Compile Include="Services\SonarIssuesService.cs" />
     <Compile Include="Services\VisualStudioAutomationService.cs" />
-    <Compile Include="Factories\SonarIssuesServiceFactory.cs" />
     <Compile Include="SonarIssueTextViewMarginProvider.cs" />
     <Compile Include="IssueListViewItem.cs" />
     <Compile Include="SonarOptionsPage.cs">
@@ -172,7 +174,7 @@
     <Compile Include="Controls\SonarIssuesControl.xaml.cs">
       <DependentUpon>SonarIssuesControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\SonarIssuesToolWindow.cs" />
+    <Compile Include="Interop\SonarIssuesToolWindow.cs" />
     <Compile Include="Guids.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -237,6 +239,7 @@
       <Name>SonarCompanion.API</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>
   </PropertyGroup>

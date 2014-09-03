@@ -1,17 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Linq;
+using System.Threading.Tasks;
 using SonarCompanion.API;
+using SonarCompanion_VSIntegration.Messagebus;
+using SonarCompanion_VSIntegration.MessageBus.Messages;
 
 namespace SonarCompanion_VSIntegration.Services
 {
-    public class SonarIssuesService : ISonarIssuesService
+    public class SonarIssuesService : ISonarIssuesService, IHandler<SonarProjectsRequested>
     {
+        private readonly IMessageBus _messageBus;
         private readonly SonarService _sonarService;
         private List<SonarIssue> _sonarIssues;
 
-        public SonarIssuesService()
+        [ImportingConstructor]
+        public SonarIssuesService(IMessageBus messageBus)
         {
+            _messageBus = messageBus;
+
+            _messageBus.Subscribe(this);
+
             var sonarUri = new Uri("http://tempuri.org/");
 
             _sonarService = new SonarService(sonarUri);
@@ -37,7 +47,11 @@ namespace SonarCompanion_VSIntegration.Services
 
         public List<SonarProject> GetProjects()
         {
-            return _sonarService.GetProjects();
+            return new List<SonarProject>
+            {
+                new SonarProject { id = "test1", nm = "Test Project 1"}
+            };
+            //return _sonarService.GetProjects();
         }
 
         public IEnumerable<SonarIssue> GetAllIssues(string key, Action<int> updateProgress)
@@ -45,6 +59,16 @@ namespace SonarCompanion_VSIntegration.Services
             _sonarIssues = _sonarService.GetAllIssues(key, updateProgress);
 
             return _sonarIssues;
+        }
+
+        public void Handle(SonarProjectsRequested item)
+        {
+            new TaskFactory().StartNew(() =>
+            {
+                var projects = GetProjects();
+
+                _messageBus.Push(new SonarProjectsAvailable {Projects = projects.ToArray()});
+            });
         }
     }
 }

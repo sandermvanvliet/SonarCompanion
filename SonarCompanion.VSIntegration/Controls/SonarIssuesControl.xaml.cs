@@ -16,12 +16,13 @@ namespace SonarCompanion_VSIntegration.Controls
     /// <summary>
     ///     Interaction logic for SonarIssuesControl.xaml
     /// </summary>
-    public partial class SonarIssuesControl : UserControl, IHandler<SolutionLoaded>
+    public partial class SonarIssuesControl : UserControl, IHandler<SolutionLoaded>, IHandler<SonarProjectsAvailable>
     {
         private readonly IMessageBus _messageBus;
         private readonly ISonarIssuesService _sonarIssuesService;
 
         private bool _initialized;
+        private string _defaultProjectName;
 
         public SonarIssuesControl(
             ISonarIssuesService sonarIssuesService,
@@ -29,7 +30,8 @@ namespace SonarCompanion_VSIntegration.Controls
         {
             _sonarIssuesService = sonarIssuesService;
             _messageBus = messageBus;
-            _messageBus.Subscribe(this);
+            _messageBus.Subscribe<SolutionLoaded>(this);
+            _messageBus.Subscribe<SonarProjectsAvailable>(this);
 
             InitializeComponent();
         }
@@ -90,26 +92,8 @@ namespace SonarCompanion_VSIntegration.Controls
         {
             if (!_initialized)
             {
-                InitializeProjects();
                 _initialized = true;
             }
-        }
-
-        private void InitializeProjects()
-        {
-            var projects = _sonarIssuesService.GetProjects();
-
-            SetSafely(ProjectsComboBox, c =>
-            {
-                // Reset list of issues (might have changed)
-                IssuesGrid.ItemsSource = null;
-
-                c.ItemsSource = projects;
-                //if (projects != null)
-                //{
-                //    c.SelectedItem = projects.SingleOrDefault(p => p.Name == _properties.DefaultProject);
-                //}
-            });
         }
 
         private void IssuesGrid_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -168,7 +152,22 @@ namespace SonarCompanion_VSIntegration.Controls
 
         public void Handle(SolutionLoaded item)
         {
-            
+            _messageBus.Push(new SonarProjectsRequested());
+        }
+
+        public void Handle(SonarProjectsAvailable item)
+        {
+            SetSafely(ProjectsComboBox, c =>
+            {
+                // Reset list of issues (might have changed)
+                IssuesGrid.ItemsSource = null;
+
+                c.ItemsSource = item.Projects;
+                if (item.Projects != null)
+                {
+                    c.SelectedItem = item.Projects.SingleOrDefault(p => p.Name == _defaultProjectName);
+                }
+            });
         }
     }
 }
