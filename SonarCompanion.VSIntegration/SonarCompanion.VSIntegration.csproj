@@ -169,9 +169,6 @@
     <Compile Include="Services\VisualStudioAutomationService.cs" />
     <Compile Include="Interop\SonarIssueTextViewMarginProvider.cs" />
     <Compile Include="ViewModel\SonarIssueViewModel.cs" />
-    <Compile Include="SonarOptionsPage.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Controls\SonarIssuesControl.xaml.cs">
       <DependentUpon>SonarIssuesControl.xaml</DependentUpon>
     </Compile>

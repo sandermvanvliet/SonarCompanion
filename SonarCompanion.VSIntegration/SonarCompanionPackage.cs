@@ -20,7 +20,6 @@ namespace SonarCompanion_VSIntegration
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideToolWindow(typeof (SonarIssuesToolWindow))]
     [Guid(GuidList.guidSonarCompanion_VSIntegrationPkgString)]
-    [ProvideOptionPage(typeof (SonarOptionsPage), "Sonar Companion", "General", 0, 0, true)]
     public sealed class SonarCompanionPackage : Package
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
