@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using EnvDTE;
 using SonarCompanion.API;
 using SonarCompanion_VSIntegration.Messagebus;
-using SonarCompanion_VSIntegration.MessageBus.Messages;
 using SonarCompanion_VSIntegration.Messagebus.Messages;
-using SonarCompanion_VSIntegration.Services;
+using SonarCompanion_VSIntegration.MessageBus.Messages;
 using SonarCompanion_VSIntegration.ViewModel;
 
 namespace SonarCompanion_VSIntegration.Controls
@@ -21,20 +18,52 @@ namespace SonarCompanion_VSIntegration.Controls
         IHandler<SonarIssuesAvailable>
     {
         private readonly IMessageBus _messageBus;
-        private readonly ISonarIssuesService _sonarIssuesService;
 
         private string _defaultProjectName;
 
-        public SonarIssuesControl(
-            ISonarIssuesService sonarIssuesService,
-            IMessageBus messageBus)
+        public SonarIssuesControl(IMessageBus messageBus)
         {
-            _sonarIssuesService = sonarIssuesService;
             _messageBus = messageBus;
-            
+
             _messageBus.Subscribe(this);
 
             InitializeComponent();
+        }
+
+        public void Handle(SolutionLoaded item)
+        {
+            _messageBus.Push(new SonarProjectsRequested());
+        }
+
+        public void Handle(SonarIssuesAvailable item)
+        {
+            var issues = item.Issues
+                .Select(i => new SonarIssueViewModel(i))
+                .OrderByDescending(i => i.Severity)
+                .ThenBy(i => i.Project)
+                .ThenBy(i => i.FileName)
+                .ThenBy(i => i.Line)
+                .ToList();
+
+            SetSafely(IssuesGrid, i => i.ItemsSource = issues);
+
+            SetSafely(ProgressIndicator, p => { p.Visibility = Visibility.Collapsed; });
+            SetSafely(IssuesGrid, l => { l.Visibility = Visibility.Visible; });
+        }
+
+        public void Handle(SonarProjectsAvailable item)
+        {
+            SetSafely(ProjectsComboBox, c =>
+            {
+                // Reset list of issues (might have changed)
+                IssuesGrid.ItemsSource = null;
+
+                c.ItemsSource = item.Projects;
+                if (item.Projects != null)
+                {
+                    c.SelectedItem = item.Projects.SingleOrDefault(p => p.Name == _defaultProjectName);
+                }
+            });
         }
 
         /// <summary>
@@ -89,7 +118,7 @@ namespace SonarCompanion_VSIntegration.Controls
                 return;
             }
 
-            _messageBus.Push(new NavigateToSource { Project = item.Project, File = item.FileName, Line = item.Line });
+            _messageBus.Push(new NavigateToSource {Project = item.Project, File = item.FileName, Line = item.Line});
         }
 
         private void SetSafely<TControl>(TControl control, Action<TControl> action)
@@ -111,43 +140,7 @@ namespace SonarCompanion_VSIntegration.Controls
             IssuesGrid.Visibility = Visibility.Collapsed;
             SetSafely(IssueLoadProgressBar, pb => pb.Value = 0);
 
-            _messageBus.Push(new SonarIssuesRequested { ProjectKey = selectedProject.Key });
-        }
-
-        public void Handle(SolutionLoaded item)
-        {
-            _messageBus.Push(new SonarProjectsRequested());
-        }
-
-        public void Handle(SonarProjectsAvailable item)
-        {
-            SetSafely(ProjectsComboBox, c =>
-            {
-                // Reset list of issues (might have changed)
-                IssuesGrid.ItemsSource = null;
-
-                c.ItemsSource = item.Projects;
-                if (item.Projects != null)
-                {
-                    c.SelectedItem = item.Projects.SingleOrDefault(p => p.Name == _defaultProjectName);
-                }
-            });
-        }
-
-        public void Handle(SonarIssuesAvailable item)
-        {
-            var issues = item.Issues
-                    .Select(i => new SonarIssueViewModel(i))
-                    .OrderByDescending(i => i.Severity)
-                    .ThenBy(i => i.Project)
-                    .ThenBy(i => i.FileName)
-                    .ThenBy(i => i.Line)
-                    .ToList();
-
-            SetSafely(IssuesGrid, i => i.ItemsSource = issues);
-
-            SetSafely(ProgressIndicator, p => { p.Visibility = Visibility.Collapsed; });
-            SetSafely(IssuesGrid, l => { l.Visibility = Visibility.Visible; });
+            _messageBus.Push(new SonarIssuesRequested {ProjectKey = selectedProject.Key});
         }
     }
 }

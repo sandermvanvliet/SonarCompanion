@@ -9,6 +9,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using SonarCompanion_VSIntegration.Controls;
 using SonarCompanion_VSIntegration.Interop;
 using SonarCompanion_VSIntegration.Messagebus;
+using SonarCompanion_VSIntegration.Services;
 
 namespace SonarCompanion_VSIntegration
 {
@@ -38,8 +39,8 @@ namespace SonarCompanion_VSIntegration
     [ProvideOptionPage(typeof (SonarOptionsPage), "Sonar Companion", "General", 0, 0, true)]
     public sealed class SonarCompanionPackage : Package
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private SolutionEventsSink solutionEventsSink;
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private SolutionEventsSink _solutionEventsSink;
 
         /// <summary>
         ///     This function is called when the user clicks the menu item that shows the
@@ -74,17 +75,25 @@ namespace SonarCompanion_VSIntegration
         protected override void Initialize()
         {
             log4net.Config.XmlConfigurator.ConfigureAndWatch(new FileInfo("log4net.config"));
-            log.Info("Initializing Sonar Companion.");
+            Log.Info("Initializing Sonar Companion.");
 
             AppDomain.CurrentDomain.UnhandledException += HandleUnhandledException;
 
             base.Initialize();
 
             var componentModel = GetService(typeof (SComponentModel)) as IComponentModel;
+            if (componentModel == null)
+            {
+                throw new InvalidOperationException("ComponentModel is not available");
+            }
 
             var messageBus = componentModel.GetService<IMessageBus>();
-
-            solutionEventsSink = new SolutionEventsSink(messageBus, GetService(typeof(SVsSolution)) as IVsSolution);
+            
+            // Compose services that depend on messagebus
+            componentModel.GetService<ISonarIssuesService>();
+            componentModel.GetService<IVisualStudioAutomationService>();
+                
+            _solutionEventsSink = new SolutionEventsSink(messageBus, GetService(typeof(SVsSolution)) as IVsSolution);
 
             
             // Add our command handlers for menu (commands must exist in the .vsct file)
@@ -110,16 +119,16 @@ namespace SonarCompanion_VSIntegration
         {
             base.Dispose(disposing);
 
-            if (solutionEventsSink != null)
+            if (_solutionEventsSink != null)
             {
-                solutionEventsSink.Dispose();
-                solutionEventsSink = null;
+                _solutionEventsSink.Dispose();
+                _solutionEventsSink = null;
             }
         }
 
         private void HandleUnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            log.Error(e.ExceptionObject);
+            Log.Error(e.ExceptionObject);
         }
     }
 }

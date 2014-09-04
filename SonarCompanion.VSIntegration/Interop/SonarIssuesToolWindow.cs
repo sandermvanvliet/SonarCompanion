@@ -1,7 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
-using SonarCompanion_VSIntegration.Factories;
 using SonarCompanion_VSIntegration.Messagebus;
 
 namespace SonarCompanion_VSIntegration.Controls
@@ -16,14 +15,13 @@ namespace SonarCompanion_VSIntegration.Controls
             BitmapResourceID = 301;
             BitmapIndex = 1;
 
-            var componentModel = (IComponentModel)Microsoft.VisualStudio.Shell.Package.
-                GetGlobalService(typeof(SComponentModel));
+            var componentModel = (IComponentModel) Microsoft.VisualStudio.Shell.Package.
+                GetGlobalService(typeof (SComponentModel));
 
-            var sonarIssuesServiceFactory = componentModel.GetService<SonarIssuesServiceFactory>();
             var messageBus = componentModel.GetService<IMessageBus>();
 
             base.Content =
-                new SonarIssuesControl(sonarIssuesServiceFactory.Create(), messageBus);
+                new SonarIssuesControl(messageBus);
         }
     }
 }

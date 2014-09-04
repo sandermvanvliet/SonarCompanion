@@ -10,6 +10,7 @@ using SonarCompanion_VSIntegration.Messagebus.Messages;
 
 namespace SonarCompanion_VSIntegration.Services
 {
+    [Export(typeof(ISonarIssuesService))]
     public class SonarIssuesService : ISonarIssuesService,
         IHandler<SonarProjectsRequested>,
         IHandler<SonarIssuesRequested>
