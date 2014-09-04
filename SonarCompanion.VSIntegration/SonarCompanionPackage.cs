@@ -59,6 +59,7 @@ namespace SonarCompanion_VSIntegration
             componentModel.GetService<ISonarIssuesService>();
             componentModel.GetService<IVisualStudioAutomationService>();
             componentModel.GetService<SettingsService>();
+            componentModel.GetService<AutoRefreshService>();
 
             _solutionEventsSink = new SolutionEventsSink(messageBus, GetService(typeof (SVsSolution)) as IVsSolution);
             _runningDocumentsTableEventSink = new RunningDocumentTableEventSink(GetService(typeof(SVsRunningDocumentTable)) as IVsRunningDocumentTable, messageBus);

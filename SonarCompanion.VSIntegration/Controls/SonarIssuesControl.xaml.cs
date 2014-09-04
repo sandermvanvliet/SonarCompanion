@@ -18,7 +18,8 @@ namespace SonarCompanion_VSIntegration.Controls
         IHandler<SolutionLoaded>, 
         IHandler<SonarProjectsAvailable>,
         IHandler<SonarIssuesAvailable>,
-        IHandler<SettingsAvailable>
+        IHandler<SettingsAvailable>,
+        IHandler<SonarIssuesRequested>
     {
         private readonly IMessageBus _messageBus;
 
@@ -149,11 +150,14 @@ namespace SonarCompanion_VSIntegration.Controls
 
         private void LoadIssuesForAsync(SonarProject selectedProject)
         {
-            ProgressIndicator.Visibility = Visibility.Visible;
-            IssuesGrid.Visibility = Visibility.Collapsed;
-            SetSafely(IssueLoadProgressBar, pb => pb.Value = 0);
-
             _messageBus.Push(new SonarIssuesRequested {ProjectKey = selectedProject.Key});
+        }
+
+        public void Handle(SonarIssuesRequested item)
+        {
+            SetSafely(ProgressIndicator, p => p.Visibility = Visibility.Visible);
+            SetSafely(IssuesGrid, i => i.Visibility = Visibility.Collapsed);
+            SetSafely(IssueLoadProgressBar, pb => pb.Value = 0);
         }
     }
 }

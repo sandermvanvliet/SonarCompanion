@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using EnvDTE;
 using SonarCompanion.API;
 
 namespace SonarCompanion_VSIntegration.Services
@@ -13,6 +14,8 @@ namespace SonarCompanion_VSIntegration.Services
 
         public SonarIssue[] GetAllIssues(string qualifier, Action<int> progressCallback = null)
         {
+            System.Threading.Thread.Sleep(10*1000);
+
             return new[]
             {
                 new SonarIssue

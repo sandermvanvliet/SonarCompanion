@@ -161,6 +161,7 @@
     <Compile Include="MessageBus\Messages\SolutionLoaded.cs" />
     <Compile Include="MessageBus\Messages\SonarProjectsAvailable.cs" />
     <Compile Include="MessageBus\Messages\SonarProjectsRequested.cs" />
+    <Compile Include="Services\AutoRefreshService.cs" />
     <Compile Include="Services\ISonarIssuesService.cs" />
     <Compile Include="Margin\SimpleScrollBar.cs" />
     <Compile Include="Margin\SonarIssueTextViewMargin.cs" />
