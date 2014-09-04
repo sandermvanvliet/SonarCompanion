@@ -124,7 +124,7 @@ namespace SonarCompanion_VSIntegration.Controls
 
         private void IssuesGrid_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var item = ((DataGrid) sender).SelectedItem as SonarIssueViewModel;
+            var item = ((DataGridRow) sender).Item as SonarIssueViewModel;
 
             if (item == null)
             {

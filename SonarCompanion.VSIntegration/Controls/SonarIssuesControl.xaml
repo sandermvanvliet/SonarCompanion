@@ -51,13 +51,17 @@
 
         <Grid Grid.Row="1">
             <DataGrid x:Name="IssuesGrid"
-                      MouseDoubleClick="IssuesGrid_OnMouseDoubleClick"
                       AutoGenerateColumns="False"
                       SelectionMode="Single"
                       GridLinesVisibility="None"
                       IsReadOnly="True"
                       CanUserResizeRows="False"
                       RowHeaderWidth="0">
+                <DataGrid.Resources>
+                    <Style TargetType="DataGridRow">
+                        <EventSetter Event="MouseDoubleClick" Handler="IssuesGrid_OnMouseDoubleClick" />
+                    </Style>
+                </DataGrid.Resources>
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Severity"
                                         Binding="{Binding Path=Severity}"
