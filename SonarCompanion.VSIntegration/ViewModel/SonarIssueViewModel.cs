@@ -1,19 +1,10 @@
 ﻿using SonarCompanion.API;
 
-namespace SonarCompanion_VSIntegration
+namespace SonarCompanion_VSIntegration.ViewModel
 {
-    /// <summary>
-    ///     The issue list view item.
-    /// </summary>
-    public class IssueListViewItem
+    public class SonarIssueViewModel
     {
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="IssueListViewItem" /> class.
-        /// </summary>
-        /// <param name="issue">
-        ///     The issue.
-        /// </param>
-        public IssueListViewItem(SonarIssue issue)
+        public SonarIssueViewModel(SonarIssue issue)
         {
             Issue = issue;
 
@@ -27,7 +18,7 @@ namespace SonarCompanion_VSIntegration
 
             if (parts.Length >= 3)
             {
-                folder = parts[2].Replace(FileName, string.Empty).TrimEnd(new char[] { '/' });
+                folder = parts[2].Replace(FileName, string.Empty).TrimEnd(new[] {'/'});
             }
 
             Folder = folder;

@@ -10,6 +10,7 @@ using SonarCompanion_VSIntegration.Messagebus;
 using SonarCompanion_VSIntegration.MessageBus.Messages;
 using SonarCompanion_VSIntegration.Messagebus.Messages;
 using SonarCompanion_VSIntegration.Services;
+using SonarCompanion_VSIntegration.ViewModel;
 
 namespace SonarCompanion_VSIntegration.Controls
 {
@@ -81,7 +82,7 @@ namespace SonarCompanion_VSIntegration.Controls
 
         private void IssuesGrid_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var item = ((DataGrid) sender).SelectedItem as IssueListViewItem;
+            var item = ((DataGrid) sender).SelectedItem as SonarIssueViewModel;
 
             if (item == null)
             {
@@ -136,7 +137,7 @@ namespace SonarCompanion_VSIntegration.Controls
         public void Handle(SonarIssuesAvailable item)
         {
             var issues = item.Issues
-                    .Select(i => new IssueListViewItem(i))
+                    .Select(i => new SonarIssueViewModel(i))
                     .OrderByDescending(i => i.Severity)
                     .ThenBy(i => i.Project)
                     .ThenBy(i => i.FileName)

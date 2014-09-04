@@ -167,8 +167,8 @@
     <Compile Include="Services\SonarIssuesService.cs" />
     <Compile Include="Services\SonarServiceDouble.cs" />
     <Compile Include="Services\VisualStudioAutomationService.cs" />
-    <Compile Include="SonarIssueTextViewMarginProvider.cs" />
-    <Compile Include="IssueListViewItem.cs" />
+    <Compile Include="Interop\SonarIssueTextViewMarginProvider.cs" />
+    <Compile Include="ViewModel\SonarIssueViewModel.cs" />
     <Compile Include="SonarOptionsPage.cs">
       <SubType>Component</SubType>
     </Compile>
