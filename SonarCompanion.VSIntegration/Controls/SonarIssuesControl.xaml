@@ -113,7 +113,8 @@
                              Height="24"
                              VerticalAlignment="Center"
                              Minimum="0"
-                             Maximum="100" />
+                             Maximum="100"
+                             IsIndeterminate="True"/>
             </Grid>
         </Grid>
     </Grid>

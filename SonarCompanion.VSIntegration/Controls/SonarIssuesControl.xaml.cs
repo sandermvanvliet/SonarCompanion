@@ -157,7 +157,6 @@ namespace SonarCompanion_VSIntegration.Controls
         {
             SetSafely(ProgressIndicator, p => p.Visibility = Visibility.Visible);
             SetSafely(IssuesGrid, i => i.Visibility = Visibility.Collapsed);
-            SetSafely(IssueLoadProgressBar, pb => pb.Value = 0);
         }
     }
 }
