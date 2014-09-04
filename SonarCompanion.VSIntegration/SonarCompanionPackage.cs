@@ -57,6 +57,7 @@ namespace SonarCompanion_VSIntegration
             // Compose services that depend on messagebus
             componentModel.GetService<ISonarIssuesService>();
             componentModel.GetService<IVisualStudioAutomationService>();
+            componentModel.GetService<SettingsService>();
 
             _solutionEventsSink = new SolutionEventsSink(messageBus, GetService(typeof (SVsSolution)) as IVsSolution);
 

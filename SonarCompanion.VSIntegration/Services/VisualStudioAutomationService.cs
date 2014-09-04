@@ -50,6 +50,23 @@ namespace SonarCompanion_VSIntegration.Services
             return _dte.Properties[category, page];
         }
 
+        public string GetSolutionDirectory()
+        {
+            var solutionService = (IVsSolution)Package.GetGlobalService(typeof(IVsSolution));
+
+            object pvar;
+            solutionService.GetProperty((int) VsSolutionPropID.SolutionDirectory, out pvar);
+
+            var solutionDirectory = pvar as string;
+
+            if (!string.IsNullOrEmpty(solutionDirectory))
+            {
+                return solutionDirectory;
+            }
+
+            return null;
+        }
+
         public void Handle(NavigateToSource item)
         {
             var projectInSolution = GetProjectsInSolution();

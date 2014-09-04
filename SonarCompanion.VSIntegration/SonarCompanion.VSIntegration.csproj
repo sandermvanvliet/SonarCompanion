@@ -164,6 +164,9 @@
     <Compile Include="Margin\SonarIssueTextViewMargin.cs" />
     <Compile Include="Services\IVisualStudioAutomationService.cs" />
     <Compile Include="MessageBus\Messages\SonarIssuesRequested.cs" />
+    <Compile Include="MessageBus\Messages\SettingsAvailable.cs" />
+    <Compile Include="MessageBus\Messages\SettingsRequested.cs" />
+    <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Services\SonarIssuesService.cs" />
     <Compile Include="Services\SonarServiceDouble.cs" />
     <Compile Include="Services\VisualStudioAutomationService.cs" />
