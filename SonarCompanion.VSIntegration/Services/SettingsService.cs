@@ -10,7 +10,7 @@ using SonarCompanion_VSIntegration.MessageBus.Messages;
 namespace SonarCompanion_VSIntegration.Services
 {
     [Export]
-    public class SettingsService : IHandler<SettingsRequested>, IHandler<SolutionLoaded>
+    public class SettingsService : IHandler<SettingsRequested>, IHandler<SolutionLoaded>, IHandler<SettingsFileChanged>
     {
         private readonly IMessageBus _messageBus;
         private readonly IVisualStudioAutomationService _automationService;
@@ -34,6 +34,11 @@ namespace SonarCompanion_VSIntegration.Services
         }
 
         public void Handle(SolutionLoaded item)
+        {
+            Task.Factory.StartNew(ReadSettingsFromSolution);
+        }
+
+        public void Handle(SettingsFileChanged item)
         {
             Task.Factory.StartNew(ReadSettingsFromSolution);
         }

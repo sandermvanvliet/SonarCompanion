@@ -150,6 +150,8 @@
   <ItemGroup>
     <Compile Include="Controls\IssuesList.cs" />
     <Compile Include="Factories\SonarIssuesServiceFactory.cs" />
+    <Compile Include="Interop\RunningDocumentTableEventSink.cs" />
+    <Compile Include="MessageBus\Messages\SettingsFileChanged.cs" />
     <Compile Include="Interop\SolutionEventsSink.cs" />
     <Compile Include="MessageBus\Message.cs" />
     <Compile Include="MessageBus\MessageBus.cs" />

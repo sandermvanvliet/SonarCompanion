@@ -24,6 +24,7 @@ namespace SonarCompanion_VSIntegration
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private SolutionEventsSink _solutionEventsSink;
+        private RunningDocumentTableEventSink _runningDocumentsTableEventSink;
 
         private void ShowToolWindow(object sender, EventArgs e)
         {
@@ -60,6 +61,7 @@ namespace SonarCompanion_VSIntegration
             componentModel.GetService<SettingsService>();
 
             _solutionEventsSink = new SolutionEventsSink(messageBus, GetService(typeof (SVsSolution)) as IVsSolution);
+            _runningDocumentsTableEventSink = new RunningDocumentTableEventSink(GetService(typeof(SVsRunningDocumentTable)) as IVsRunningDocumentTable, messageBus);
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
             var mcs = GetService(typeof (IMenuCommandService)) as OleMenuCommandService;
@@ -88,6 +90,11 @@ namespace SonarCompanion_VSIntegration
             {
                 _solutionEventsSink.Dispose();
                 _solutionEventsSink = null;
+            }
+            if (_runningDocumentsTableEventSink != null)
+            {
+                _runningDocumentsTableEventSink.Dispose();
+                _runningDocumentsTableEventSink = null;
             }
         }
 

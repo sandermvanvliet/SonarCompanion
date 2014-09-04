@@ -10,14 +10,14 @@ namespace SonarCompanion_VSIntegration.Interop
     {
         private readonly IMessageBus _messageBus;
         private readonly IVsSolution _solution;
-        private uint cookie;
+        private uint _cookie;
         private bool _isDisposed;
 
         public SolutionEventsSink(IMessageBus messageBus, IVsSolution solution)
         {
             _messageBus = messageBus;
             _solution = solution;
-            solution.AdviseSolutionEvents(this, out cookie);
+            solution.AdviseSolutionEvents(this, out _cookie);
         }
 
         public int OnAfterOpenProject(IVsHierarchy pHierarchy, int fAdded)
@@ -78,10 +78,10 @@ namespace SonarCompanion_VSIntegration.Interop
             {
                 _isDisposed = true;
 
-                if (cookie != 0)
+                if (_cookie != 0)
                 {
-                    _solution.UnadviseSolutionEvents(cookie);
-                    cookie = 0;
+                    _solution.UnadviseSolutionEvents(_cookie);
+                    _cookie = 0;
                 }
             }
         }
