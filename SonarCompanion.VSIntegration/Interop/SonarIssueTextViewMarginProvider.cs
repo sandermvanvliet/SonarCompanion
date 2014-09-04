@@ -10,7 +10,7 @@ using SonarCompanion_VSIntegration.Factories;
 using SonarCompanion_VSIntegration.Margin;
 using SonarCompanion_VSIntegration.Services;
 
-namespace SonarCompanion_VSIntegration
+namespace SonarCompanion_VSIntegration.Interop
 {
     [Export(typeof (IWpfTextViewMarginProvider))]
     [Name("SonarIssueMargin")]

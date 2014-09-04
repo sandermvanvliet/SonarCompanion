@@ -1,6 +1,4 @@
-﻿using SonarCompanion_VSIntegration.Messagebus;
-
-namespace SonarCompanion_VSIntegration.MessageBus.Messages
+﻿namespace SonarCompanion_VSIntegration.MessageBus.Messages
 {
     public class SonarIssuesRequested : Message
     {

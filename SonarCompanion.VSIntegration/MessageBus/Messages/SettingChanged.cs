@@ -1,4 +1,4 @@
-﻿namespace SonarCompanion_VSIntegration.Messagebus.Messages
+﻿namespace SonarCompanion_VSIntegration.MessageBus.Messages
 {
     public class SettingChanged : Message
     {

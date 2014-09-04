@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SonarCompanion_VSIntegration.Messagebus
+﻿namespace SonarCompanion_VSIntegration.MessageBus
 {
     public abstract class Message
     {

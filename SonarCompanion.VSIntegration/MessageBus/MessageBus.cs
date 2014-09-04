@@ -1,12 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
-namespace SonarCompanion_VSIntegration.Messagebus
+namespace SonarCompanion_VSIntegration.MessageBus
 {
     public interface IMessageBus
     {

@@ -4,9 +4,8 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
 using SonarCompanion.API;
-using SonarCompanion_VSIntegration.Messagebus;
+using SonarCompanion_VSIntegration.MessageBus;
 using SonarCompanion_VSIntegration.MessageBus.Messages;
-using SonarCompanion_VSIntegration.Messagebus.Messages;
 
 namespace SonarCompanion_VSIntegration.Services
 {

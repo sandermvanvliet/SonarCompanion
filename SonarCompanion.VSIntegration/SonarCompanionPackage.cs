@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using SonarCompanion_VSIntegration.Controls;
 using SonarCompanion_VSIntegration.Interop;
-using SonarCompanion_VSIntegration.Messagebus;
+using SonarCompanion_VSIntegration.MessageBus;
 using SonarCompanion_VSIntegration.Services;
 
 namespace SonarCompanion_VSIntegration

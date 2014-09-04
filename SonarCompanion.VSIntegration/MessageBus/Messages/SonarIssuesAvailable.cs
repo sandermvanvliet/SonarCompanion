@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using SonarCompanion.API;
 
-namespace SonarCompanion_VSIntegration.Messagebus.Messages
+namespace SonarCompanion_VSIntegration.MessageBus.Messages
 {
     public class SonarIssuesAvailable : Message
     {

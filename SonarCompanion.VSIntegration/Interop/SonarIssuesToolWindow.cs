@@ -1,9 +1,10 @@
 ﻿using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
-using SonarCompanion_VSIntegration.Messagebus;
+using SonarCompanion_VSIntegration.Controls;
+using SonarCompanion_VSIntegration.MessageBus;
 
-namespace SonarCompanion_VSIntegration.Controls
+namespace SonarCompanion_VSIntegration.Interop
 {
     [Guid("70bd26a2-c867-4f03-b1a3-b60814283b2b")]
     public class SonarIssuesToolWindow : ToolWindowPane

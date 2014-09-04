@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.Composition;
-using SonarCompanion_VSIntegration.Messagebus;
+using SonarCompanion_VSIntegration.MessageBus;
 using SonarCompanion_VSIntegration.Services;
 
 namespace SonarCompanion_VSIntegration.Factories
