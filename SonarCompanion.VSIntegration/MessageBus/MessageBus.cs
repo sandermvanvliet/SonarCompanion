@@ -61,6 +61,11 @@ namespace SonarCompanion_VSIntegration.MessageBus
 
         public void Push<TMessage>(TMessage item) where TMessage : Message
         {
+            if (item == null)
+            {
+                return;
+            }
+
             _queue.Enqueue(item);
 
             if (_notifyTask == null)
@@ -74,6 +79,11 @@ namespace SonarCompanion_VSIntegration.MessageBus
             while (_queue.Any())
             {
                 var item = _queue.Dequeue();
+
+                if (item == null)
+                {
+                    continue;
+                }
 
                 var toFind = typeof(IHandler<>).MakeGenericType(item.GetType());
                 var methodToInvoke = toFind.GetMethod("Handle");
