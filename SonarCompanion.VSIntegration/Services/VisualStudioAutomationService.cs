@@ -78,13 +78,5 @@ namespace SonarCompanion_VSIntegration.Services
 
             OpenFileAtLine(path, item.Line);
         }
-
-        public void Handle(Message item)
-        {
-            if (item is NavigateToSource)
-            {
-                Handle(item as NavigateToSource);
-            }
-        }
     }
 }
