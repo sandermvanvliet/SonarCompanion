@@ -5,6 +5,7 @@ using System.Linq;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using SonarCompanion_VSIntegration.Interop;
 using SonarCompanion_VSIntegration.MessageBus;
 using SonarCompanion_VSIntegration.MessageBus.Messages;
 using Constants = EnvDTE.Constants;
@@ -14,7 +15,7 @@ namespace SonarCompanion_VSIntegration.Services
     [Export(typeof (IVisualStudioAutomationService))]
     public class VisualStudioAutomationService : IVisualStudioAutomationService, IHandler<NavigateToSource>
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly DTE _dte;
 
@@ -57,7 +58,7 @@ namespace SonarCompanion_VSIntegration.Services
 
             if (project == null)
             {
-                log.ErrorFormat("Unable to find project: {0}", item.Project);
+                Log.ErrorFormat("Unable to find project: {0}", item.Project);
                 return;
             }
 
@@ -65,7 +66,7 @@ namespace SonarCompanion_VSIntegration.Services
 
             if (projectPath == null)
             {
-                log.ErrorFormat("Unable to determine path for file: {0}", project.FileName);
+                Log.ErrorFormat("Unable to determine path for file: {0}", project.FileName);
                 return;
             }
 
@@ -73,7 +74,7 @@ namespace SonarCompanion_VSIntegration.Services
 
             if (!File.Exists(path))
             {
-                log.ErrorFormat("File not found: {0}", path);
+                Log.ErrorFormat("File not found: {0}", path);
             }
 
             OpenFileAtLine(path, item.Line);

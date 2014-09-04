@@ -187,7 +187,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PkgCmdID.cs" />
     <Compile Include="ViewModel\SonarIssuesControlViewModel.cs" />
-    <Compile Include="VsInteropUtilities.cs" />
+    <Compile Include="Interop\VsInteropUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources.resx">
