@@ -12,10 +12,11 @@ namespace SonarCompanion_VSIntegration.Services
     [Export(typeof(ISonarIssuesService))]
     public class SonarIssuesService : ISonarIssuesService,
         IHandler<SonarProjectsRequested>,
-        IHandler<SonarIssuesRequested>
+        IHandler<SonarIssuesRequested>,
+        IHandler<SettingsAvailable>
     {
         private readonly IMessageBus _messageBus;
-        private readonly ISonarService _sonarService;
+        private ISonarService _sonarService;
         private SonarIssue[] _sonarIssues;
 
         [ImportingConstructor]
@@ -79,5 +80,19 @@ namespace SonarCompanion_VSIntegration.Services
                 _messageBus.Push(new SonarIssuesAvailable { ProjectKey = item.ProjectKey, Issues = issues });
             });
         }
+
+        public void Handle(SettingsAvailable item)
+        {
+            if (item.Settings.ContainsKey(SonarCompanionSettingKeys.SonarUri))
+            {
+                _sonarService = new SonarService(new Uri(item.Settings[SonarCompanionSettingKeys.SonarUri]));
+            }
+        }
+    }
+
+    public class SonarCompanionSettingKeys
+    {
+        public const string SonarUri = "sonarUri";
+        public const string DefaultProject = "defaultProjectName";
     }
 }

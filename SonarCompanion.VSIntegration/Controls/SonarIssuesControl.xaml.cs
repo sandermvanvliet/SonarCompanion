@@ -6,6 +6,7 @@ using System.Windows.Input;
 using SonarCompanion.API;
 using SonarCompanion_VSIntegration.MessageBus;
 using SonarCompanion_VSIntegration.MessageBus.Messages;
+using SonarCompanion_VSIntegration.Services;
 using SonarCompanion_VSIntegration.ViewModel;
 
 namespace SonarCompanion_VSIntegration.Controls
@@ -13,8 +14,11 @@ namespace SonarCompanion_VSIntegration.Controls
     /// <summary>
     ///     Interaction logic for SonarIssuesControl.xaml
     /// </summary>
-    public partial class SonarIssuesControl : UserControl, IHandler<SolutionLoaded>, IHandler<SonarProjectsAvailable>,
-        IHandler<SonarIssuesAvailable>
+    public partial class SonarIssuesControl : UserControl, 
+        IHandler<SolutionLoaded>, 
+        IHandler<SonarProjectsAvailable>,
+        IHandler<SonarIssuesAvailable>,
+        IHandler<SettingsAvailable>
     {
         private readonly IMessageBus _messageBus;
 
@@ -63,6 +67,16 @@ namespace SonarCompanion_VSIntegration.Controls
                     c.SelectedItem = item.Projects.SingleOrDefault(p => p.Name == _defaultProjectName);
                 }
             });
+        }
+
+        public void Handle(SettingsAvailable item)
+        {
+            if (item.Settings.ContainsKey(SonarCompanionSettingKeys.DefaultProject))
+            {
+                _defaultProjectName = item.Settings[SonarCompanionSettingKeys.DefaultProject];
+
+                _messageBus.Push(new SonarProjectsRequested());
+            }
         }
 
         /// <summary>
