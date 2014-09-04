@@ -153,8 +153,7 @@
     <Compile Include="Interop\SolutionEventsSink.cs" />
     <Compile Include="MessageBus\Message.cs" />
     <Compile Include="MessageBus\MessageBus.cs" />
-    <Compile Include="MessageBus\Messages\IssuesLoaded.cs" />
-    <Compile Include="MessageBus\Messages\IssuesRequested.cs" />
+    <Compile Include="MessageBus\Messages\SonarIssuesAvailable.cs" />
     <Compile Include="MessageBus\Messages\NavigateToSource.cs" />
     <Compile Include="MessageBus\Messages\SettingChanged.cs" />
     <Compile Include="MessageBus\Messages\SolutionLoaded.cs" />
@@ -164,7 +163,9 @@
     <Compile Include="Margin\SimpleScrollBar.cs" />
     <Compile Include="Margin\SonarIssueTextViewMargin.cs" />
     <Compile Include="Services\IVisualStudioAutomationService.cs" />
+    <Compile Include="MessageBus\Messages\SonarIssuesRequested.cs" />
     <Compile Include="Services\SonarIssuesService.cs" />
+    <Compile Include="Services\SonarServiceDouble.cs" />
     <Compile Include="Services\VisualStudioAutomationService.cs" />
     <Compile Include="SonarIssueTextViewMarginProvider.cs" />
     <Compile Include="IssueListViewItem.cs" />
@@ -185,7 +186,6 @@
     <Compile Include="SonarCompanionPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PkgCmdID.cs" />
-    <Compile Include="Services\DummySonarIssuesService.cs" />
     <Compile Include="ViewModel\SonarIssuesControlViewModel.cs" />
     <Compile Include="VsInteropUtilities.cs" />
   </ItemGroup>

@@ -6,14 +6,17 @@ using System.Threading.Tasks;
 using SonarCompanion.API;
 using SonarCompanion_VSIntegration.Messagebus;
 using SonarCompanion_VSIntegration.MessageBus.Messages;
+using SonarCompanion_VSIntegration.Messagebus.Messages;
 
 namespace SonarCompanion_VSIntegration.Services
 {
-    public class SonarIssuesService : ISonarIssuesService, IHandler<SonarProjectsRequested>
+    public class SonarIssuesService : ISonarIssuesService,
+        IHandler<SonarProjectsRequested>,
+        IHandler<SonarIssuesRequested>
     {
         private readonly IMessageBus _messageBus;
-        private readonly SonarService _sonarService;
-        private List<SonarIssue> _sonarIssues;
+        private readonly ISonarService _sonarService;
+        private SonarIssue[] _sonarIssues;
 
         [ImportingConstructor]
         public SonarIssuesService(IMessageBus messageBus)
@@ -22,9 +25,9 @@ namespace SonarCompanion_VSIntegration.Services
 
             _messageBus.Subscribe(this);
 
-            var sonarUri = new Uri("http://tempuri.org/");
+            //var sonarUri = new Uri("http://tempuri.org/");
 
-            _sonarService = new SonarService(sonarUri);
+            _sonarService = new SonarServiceDouble(); // new SonarService(sonarUri);
         }
 
         public SonarIssue GetIssueFor(string fileName, int lineNumber)
@@ -35,7 +38,7 @@ namespace SonarCompanion_VSIntegration.Services
 
         public IEnumerable<SonarIssue> GetIssuesForFile(string fileName)
         {
-            if(_sonarIssues != null)
+            if (_sonarIssues != null)
             {
                 return
                 _sonarIssues.Where(
@@ -47,11 +50,7 @@ namespace SonarCompanion_VSIntegration.Services
 
         public List<SonarProject> GetProjects()
         {
-            return new List<SonarProject>
-            {
-                new SonarProject { id = "test1", nm = "Test Project 1"}
-            };
-            //return _sonarService.GetProjects();
+            return _sonarService.GetProjects();
         }
 
         public IEnumerable<SonarIssue> GetAllIssues(string key, Action<int> updateProgress)
@@ -67,7 +66,17 @@ namespace SonarCompanion_VSIntegration.Services
             {
                 var projects = GetProjects();
 
-                _messageBus.Push(new SonarProjectsAvailable {Projects = projects.ToArray()});
+                _messageBus.Push(new SonarProjectsAvailable { Projects = projects.ToArray() });
+            });
+        }
+
+        public void Handle(SonarIssuesRequested item)
+        {
+            new TaskFactory().StartNew(() =>
+            {
+                var issues = GetAllIssues(item.ProjectKey, p => { });
+
+                _messageBus.Push(new SonarIssuesAvailable { ProjectKey = item.ProjectKey, Issues = issues });
             });
         }
     }

@@ -16,7 +16,8 @@ namespace SonarCompanion_VSIntegration.Controls
     /// <summary>
     ///     Interaction logic for SonarIssuesControl.xaml
     /// </summary>
-    public partial class SonarIssuesControl : UserControl, IHandler<SolutionLoaded>, IHandler<SonarProjectsAvailable>
+    public partial class SonarIssuesControl : UserControl, IHandler<SolutionLoaded>, IHandler<SonarProjectsAvailable>,
+        IHandler<SonarIssuesAvailable>
     {
         private readonly IMessageBus _messageBus;
         private readonly ISonarIssuesService _sonarIssuesService;
@@ -109,27 +110,7 @@ namespace SonarCompanion_VSIntegration.Controls
             IssuesGrid.Visibility = Visibility.Collapsed;
             SetSafely(IssueLoadProgressBar, pb => pb.Value = 0);
 
-            Task.Run(() =>
-            {
-                var issues = _sonarIssuesService
-                    .GetAllIssues(selectedProject.Key, UpdateProgress)
-                    .Select(i => new IssueListViewItem(i))
-                    .OrderByDescending(i => i.Severity)
-                    .ThenBy(i => i.Project)
-                    .ThenBy(i => i.FileName)
-                    .ThenBy(i => i.Line)
-                    .ToList();
-
-                SetSafely(IssuesGrid, i => i.ItemsSource = issues);
-
-                SetSafely(ProgressIndicator, p => { p.Visibility = Visibility.Collapsed; });
-                SetSafely(IssuesGrid, l => { l.Visibility = Visibility.Visible; });
-            });
-        }
-
-        private void UpdateProgress(int percentage)
-        {
-            SetSafely(IssueLoadProgressBar, pb => pb.Value = percentage);
+            _messageBus.Push(new SonarIssuesRequested { ProjectKey = selectedProject.Key });
         }
 
         public void Handle(SolutionLoaded item)
@@ -150,6 +131,22 @@ namespace SonarCompanion_VSIntegration.Controls
                     c.SelectedItem = item.Projects.SingleOrDefault(p => p.Name == _defaultProjectName);
                 }
             });
+        }
+
+        public void Handle(SonarIssuesAvailable item)
+        {
+            var issues = item.Issues
+                    .Select(i => new IssueListViewItem(i))
+                    .OrderByDescending(i => i.Severity)
+                    .ThenBy(i => i.Project)
+                    .ThenBy(i => i.FileName)
+                    .ThenBy(i => i.Line)
+                    .ToList();
+
+            SetSafely(IssuesGrid, i => i.ItemsSource = issues);
+
+            SetSafely(ProgressIndicator, p => { p.Visibility = Visibility.Collapsed; });
+            SetSafely(IssuesGrid, l => { l.Visibility = Visibility.Visible; });
         }
     }
 }
