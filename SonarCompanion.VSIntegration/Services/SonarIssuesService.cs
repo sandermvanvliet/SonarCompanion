@@ -25,10 +25,6 @@ namespace SonarCompanion_VSIntegration.Services
             _messageBus = messageBus;
 
             _messageBus.Subscribe(this);
-
-            //var sonarUri = new Uri("http://tempuri.org/");
-
-            _sonarService = new SonarServiceDouble(); // new SonarService(sonarUri);
         }
 
         public SonarIssue GetIssueFor(string fileName, int lineNumber)
