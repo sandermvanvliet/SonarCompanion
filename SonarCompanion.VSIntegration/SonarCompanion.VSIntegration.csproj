@@ -155,6 +155,7 @@
     <Compile Include="Interop\SolutionEventsSink.cs" />
     <Compile Include="MessageBus\Message.cs" />
     <Compile Include="MessageBus\MessageBus.cs" />
+    <Compile Include="MessageBus\Messages\SolutionClosed.cs" />
     <Compile Include="MessageBus\Messages\SonarIssuesAvailable.cs" />
     <Compile Include="MessageBus\Messages\NavigateToSource.cs" />
     <Compile Include="MessageBus\Messages\SettingChanged.cs" />

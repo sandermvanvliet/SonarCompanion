@@ -69,6 +69,8 @@ namespace SonarCompanion_VSIntegration.Interop
 
         public int OnAfterCloseSolution(object pUnkReserved)
         {
+            _messageBus.Push(new SolutionClosed());
+
             return VSConstants.S_OK;
         }
 

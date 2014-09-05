@@ -13,7 +13,8 @@ using Constants = EnvDTE.Constants;
 namespace SonarCompanion_VSIntegration.Services
 {
     [Export(typeof (IVisualStudioAutomationService))]
-    public class VisualStudioAutomationService : IVisualStudioAutomationService, IHandler<NavigateToSource>
+    public class VisualStudioAutomationService : IVisualStudioAutomationService, 
+        IHandler<NavigateToSource>
     {
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 

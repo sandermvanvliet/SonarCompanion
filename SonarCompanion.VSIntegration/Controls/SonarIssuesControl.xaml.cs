@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using EnvDTE;
 using SonarCompanion.API;
 using SonarCompanion_VSIntegration.MessageBus;
 using SonarCompanion_VSIntegration.MessageBus.Messages;
@@ -19,7 +20,8 @@ namespace SonarCompanion_VSIntegration.Controls
         IHandler<SonarProjectsAvailable>,
         IHandler<SonarIssuesAvailable>,
         IHandler<SettingsAvailable>,
-        IHandler<SonarIssuesRequested>
+        IHandler<SonarIssuesRequested>,
+        IHandler<SolutionClosed>
     {
         private readonly IMessageBus _messageBus;
 
@@ -165,6 +167,12 @@ namespace SonarCompanion_VSIntegration.Controls
             {
                 _messageBus.Push(new SonarProjectsRequested());
             }
+        }
+
+        public void Handle(SolutionClosed item)
+        {
+            SetSafely(IssuesGrid, i => i.ItemsSource = null);
+            SetSafely(ProjectsComboBox, p => p.ItemsSource = null);
         }
     }
 }

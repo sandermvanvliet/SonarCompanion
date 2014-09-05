@@ -10,7 +10,10 @@ using SonarCompanion_VSIntegration.MessageBus.Messages;
 namespace SonarCompanion_VSIntegration.Services
 {
     [Export]
-    public class SettingsService : IHandler<SettingsRequested>, IHandler<SolutionLoaded>, IHandler<SettingsFileChanged>
+    public class SettingsService : IHandler<SettingsRequested>, 
+        IHandler<SolutionLoaded>, 
+        IHandler<SettingsFileChanged>,
+        IHandler<SolutionClosed>
     {
         private readonly IMessageBus _messageBus;
         private readonly IVisualStudioAutomationService _automationService;
@@ -77,6 +80,14 @@ namespace SonarCompanion_VSIntegration.Services
                 .Where(line => !line.StartsWith("#") && !string.IsNullOrEmpty(line.Trim()))
                 .Select(line => line.Split(new[] {'='}, StringSplitOptions.RemoveEmptyEntries))
                 .ToDictionary(res => res[0], res => res[1]);
+        }
+
+        public void Handle(SolutionClosed item)
+        {
+            lock (_settingsSyncRoot)
+            {
+                _settings.Clear();
+            }
         }
     }
 }
