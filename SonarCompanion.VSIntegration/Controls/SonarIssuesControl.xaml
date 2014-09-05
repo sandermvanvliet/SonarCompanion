@@ -100,6 +100,13 @@
                                         CanUserResize="True"
                                         CanUserSort="True"
                                         Width="*" />
+                    <DataGridTextColumn 
+                        Header="Rule"
+                        Binding="{Binding Path=Rule}"
+                        CanUserReorder="True"
+                        CanUserResize="True"
+                        CanUserSort="True"
+                        Width="140" />
                 </DataGrid.Columns>
             </DataGrid>
 

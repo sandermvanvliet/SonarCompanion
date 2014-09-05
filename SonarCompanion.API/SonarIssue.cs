@@ -39,5 +39,7 @@ namespace SonarCompanion.API
                 return System.IO.Path.GetFileName(parts.Last());
             }
         }
+
+        public SonarRule SonarRule { get; set; }
     }
 }

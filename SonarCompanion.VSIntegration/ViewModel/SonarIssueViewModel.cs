@@ -26,6 +26,7 @@ namespace SonarCompanion_VSIntegration.ViewModel
             Line = issue.Line;
             Message = issue.Message;
             Severity = issue.Severity;
+            Rule = issue.Rule;
         }
 
         public Severity Severity { get; private set; }
@@ -51,6 +52,8 @@ namespace SonarCompanion_VSIntegration.ViewModel
         ///     Gets the message.
         /// </summary>
         public string Message { get; private set; }
+
+        public string Rule { get; private set; }
 
         /// <summary>
         ///     Gets the issue.

@@ -59,7 +59,7 @@ namespace SonarCompanion.API
 
                 var data = client.Get<SonarIssueList>(restRequest);
 
-                issueList.AddRange(data.Data.Issues);
+                issueList.AddRange(data.Data.Issues.Select(i => EnrichIssue(i, data.Data.Rules)));
 
                 lastPage = pageIndex > data.Data.Paging.Pages;
 
@@ -71,6 +71,18 @@ namespace SonarCompanion.API
             }
 
             return issueList.ToArray();
+        }
+
+        private static SonarIssue EnrichIssue(SonarIssue sonarIssue, IEnumerable<SonarRule> rules)
+        {
+            var matchinRule = rules.SingleOrDefault(r => r.Key == sonarIssue.Rule);
+
+            if (matchinRule != null)
+            {
+                sonarIssue.SonarRule = matchinRule;
+            }
+
+            return sonarIssue;
         }
 
         public List<SonarProject> GetProjects()
