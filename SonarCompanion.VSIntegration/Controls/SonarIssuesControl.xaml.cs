@@ -80,6 +80,12 @@ namespace SonarCompanion_VSIntegration.Controls
             }
         }
 
+        public void Handle(SonarIssuesRequested item)
+        {
+            SetSafely(ProgressIndicator, p => p.Visibility = Visibility.Visible);
+            SetSafely(IssuesGrid, i => i.Visibility = Visibility.Collapsed);
+        }
+
         /// <summary>
         ///     The refresh button_ on click.
         /// </summary>
@@ -153,10 +159,12 @@ namespace SonarCompanion_VSIntegration.Controls
             _messageBus.Push(new SonarIssuesRequested {ProjectKey = selectedProject.Key});
         }
 
-        public void Handle(SonarIssuesRequested item)
+        private void SonarIssuesControl_OnLoaded(object sender, RoutedEventArgs e)
         {
-            SetSafely(ProgressIndicator, p => p.Visibility = Visibility.Visible);
-            SetSafely(IssuesGrid, i => i.Visibility = Visibility.Collapsed);
+            if (ProjectsComboBox.Items == null || ProjectsComboBox.Items.Count == 0)
+            {
+                _messageBus.Push(new SonarProjectsRequested());
+            }
         }
     }
 }
