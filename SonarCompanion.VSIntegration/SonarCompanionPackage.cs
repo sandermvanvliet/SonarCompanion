@@ -1,59 +1,34 @@
 ﻿using System;
 using System.ComponentModel.Design;
 using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
+using log4net;
+using log4net.Config;
 using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using SonarCompanion_VSIntegration.Controls;
+using SonarCompanion_VSIntegration.Interop;
+using SonarCompanion_VSIntegration.MessageBus;
+using SonarCompanion_VSIntegration.Services;
 
 namespace SonarCompanion_VSIntegration
 {
-    /// <summary>
-    ///     This is the class that implements the package exposed by this assembly.
-    ///     The minimum requirement for a class to be considered a valid package for Visual Studio
-    ///     is to implement the IVsPackage interface and register itself with the shell.
-    ///     This package uses the helper classes defined inside the Managed Package Framework (MPF)
-    ///     to do it: it derives from the Package class that provides the implementation of the
-    ///     IVsPackage interface and uses the registration attributes defined in the framework to
-    ///     register itself and its components with the shell.
-    /// </summary>
-    // This attribute tells the PkgDef creation utility (CreatePkgDef.exe) that this class is
-    // a package.
     [PackageRegistration(UseManagedResourcesOnly = true)]
-
-    // This attribute is used to register the information needed to show this package
-    // in the Help/About dialog of Visual Studio.
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
-
-    // This attribute is needed to let the shell know that this package exposes some menus.
     [ProvideMenuResource("Menus.ctmenu", 1)]
-
-    // This attribute registers a tool window exposed by this package.
     [ProvideToolWindow(typeof (SonarIssuesToolWindow))]
     [Guid(GuidList.guidSonarCompanion_VSIntegrationPkgString)]
-    [ProvideOptionPage(typeof (SonarOptionsPage), "Sonar Companion", "General", 0, 0, true)]
     public sealed class SonarCompanionPackage : Package
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private SolutionEventsSink _solutionEventsSink;
+        private RunningDocumentTableEventSink _runningDocumentsTableEventSink;
 
-        /// <summary>
-        ///     This function is called when the user clicks the menu item that shows the
-        ///     tool window. See the Initialize method to see how the menu item is associated to
-        ///     this function using the OleMenuCommandService service and the MenuCommand class.
-        /// </summary>
-        /// <param name="sender">
-        ///     The sender.
-        /// </param>
-        /// <param name="e">
-        ///     The e.
-        /// </param>
         private void ShowToolWindow(object sender, EventArgs e)
         {
-            // Get the instance number 0 of this tool window. This window is single instance so this instance
-            // is actually the only one.
-            // The last flag is set to true so that if the tool window does not exists it will be created.
-            ToolWindowPane window = FindToolWindow(typeof (SonarIssuesToolWindow), 0, true);
+            var window = FindToolWindow(typeof (SonarIssuesToolWindow), 0, true);
             if ((null == window) || (null == window.Frame))
             {
                 throw new NotSupportedException(Resources.CanNotCreateWindow);
@@ -63,18 +38,31 @@ namespace SonarCompanion_VSIntegration
             ErrorHandler.ThrowOnFailure(windowFrame.Show());
         }
 
-        /// <summary>
-        ///     Initialization of the package; this method is called right after the package is sited, so this is the place
-        ///     where you can put all the initialization code that rely on services provided by VisualStudio.
-        /// </summary>
         protected override void Initialize()
         {
-            log4net.Config.XmlConfigurator.ConfigureAndWatch(new FileInfo("log4net.config"));
-            log.Info("Initializing Sonar Companion.");
+            XmlConfigurator.ConfigureAndWatch(new FileInfo("log4net.config"));
+            Log.Info("Initializing Sonar Companion.");
 
             AppDomain.CurrentDomain.UnhandledException += HandleUnhandledException;
 
             base.Initialize();
+
+            var componentModel = GetService(typeof (SComponentModel)) as IComponentModel;
+            if (componentModel == null)
+            {
+                throw new InvalidOperationException("ComponentModel is not available");
+            }
+
+            var messageBus = componentModel.GetService<IMessageBus>();
+
+            // Compose services that depend on messagebus
+            componentModel.GetService<ISonarIssuesService>();
+            componentModel.GetService<IVisualStudioAutomationService>();
+            componentModel.GetService<SettingsService>();
+            componentModel.GetService<AutoRefreshService>();
+
+            _solutionEventsSink = new SolutionEventsSink(messageBus, GetService(typeof (SVsSolution)) as IVsSolution);
+            _runningDocumentsTableEventSink = new RunningDocumentTableEventSink(GetService(typeof(SVsRunningDocumentTable)) as IVsRunningDocumentTable, messageBus);
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
             var mcs = GetService(typeof (IMenuCommandService)) as OleMenuCommandService;
@@ -95,9 +83,25 @@ namespace SonarCompanion_VSIntegration
             }
         }
 
-        private void HandleUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        protected override void Dispose(bool disposing)
         {
-            log.Error(e.ExceptionObject);
+            base.Dispose(disposing);
+
+            if (_solutionEventsSink != null)
+            {
+                _solutionEventsSink.Dispose();
+                _solutionEventsSink = null;
+            }
+            if (_runningDocumentsTableEventSink != null)
+            {
+                _runningDocumentsTableEventSink.Dispose();
+                _runningDocumentsTableEventSink = null;
+            }
+        }
+
+        private static void HandleUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            Log.Error(e.ExceptionObject);
         }
     }
 }

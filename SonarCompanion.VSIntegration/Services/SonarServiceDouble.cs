@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using EnvDTE;
 using SonarCompanion.API;
 
 namespace SonarCompanion_VSIntegration.Services
 {
-    public class DummySonarIssuesService : ISonarIssuesService
+    public class SonarServiceDouble : ISonarService
     {
-        public SonarIssue GetIssueFor(string fileName, int lineNumber)
+        public SonarIssue[] GetIssues(string qualifier)
         {
-            return GetIssuesForFile(fileName)
-                .FirstOrDefault(issue => issue.Line == lineNumber);
+            return GetAllIssues(qualifier);
         }
 
-        public IEnumerable<SonarIssue> GetIssuesForFile(string fileName)
+        public SonarIssue[] GetAllIssues(string qualifier, Action<int> progressCallback = null)
         {
+            System.Threading.Thread.Sleep(10*1000);
+
             return new[]
             {
                 new SonarIssue
@@ -96,13 +97,15 @@ namespace SonarCompanion_VSIntegration.Services
         {
             return new List<SonarProject>
             {
-                new SonarProject { id = "1", k = "Test", nm = "Test" }
+                new SonarProject { id = "p1", k = "TestProject1", nm = "Test Project 1"},
+                new SonarProject { id = "p2", k = "TestProject2", nm = "Test Project 2"},
+                new SonarProject { id = "p3", k = "TestProject3", nm = "Test Project 3"},
             };
         }
 
-        public IEnumerable<SonarIssue> GetAllIssues(string key, Action<int> updateProgress)
+        public List<SonarResource> GetResources()
         {
-            return GetIssuesForFile("foo");
+            throw new NotImplementedException();
         }
     }
 }

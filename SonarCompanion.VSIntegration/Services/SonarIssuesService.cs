@@ -1,20 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Linq;
+using System.Threading.Tasks;
 using SonarCompanion.API;
+using SonarCompanion_VSIntegration.MessageBus;
+using SonarCompanion_VSIntegration.MessageBus.Messages;
 
 namespace SonarCompanion_VSIntegration.Services
 {
-    public class SonarIssuesService : ISonarIssuesService
+    [Export(typeof(ISonarIssuesService))]
+    public class SonarIssuesService : ISonarIssuesService,
+        IHandler<SonarProjectsRequested>,
+        IHandler<SonarIssuesRequested>,
+        IHandler<SettingsAvailable>
     {
-        private readonly SonarService _sonarService;
-        private List<SonarIssue> _sonarIssues;
+        private readonly IMessageBus _messageBus;
+        private ISonarService _sonarService;
+        private SonarIssue[] _sonarIssues;
 
-        public SonarIssuesService(ISonarOptionsService sonarOptionsService)
+        [ImportingConstructor]
+        public SonarIssuesService(IMessageBus messageBus)
         {
-            var sonarUri = new Uri(sonarOptionsService.GetOptions().SonarUrl);
+            _messageBus = messageBus;
 
-            _sonarService = new SonarService(sonarUri);
+            _messageBus.Subscribe(this);
+
+            //var sonarUri = new Uri("http://tempuri.org/");
+
+            _sonarService = new SonarServiceDouble(); // new SonarService(sonarUri);
         }
 
         public SonarIssue GetIssueFor(string fileName, int lineNumber)
@@ -25,7 +39,7 @@ namespace SonarCompanion_VSIntegration.Services
 
         public IEnumerable<SonarIssue> GetIssuesForFile(string fileName)
         {
-            if(_sonarIssues != null)
+            if (_sonarIssues != null)
             {
                 return
                 _sonarIssues.Where(
@@ -45,6 +59,34 @@ namespace SonarCompanion_VSIntegration.Services
             _sonarIssues = _sonarService.GetAllIssues(key, updateProgress);
 
             return _sonarIssues;
+        }
+
+        public void Handle(SonarProjectsRequested item)
+        {
+            new TaskFactory().StartNew(() =>
+            {
+                var projects = GetProjects();
+
+                _messageBus.Push(new SonarProjectsAvailable { Projects = projects.ToArray() });
+            });
+        }
+
+        public void Handle(SonarIssuesRequested item)
+        {
+            new TaskFactory().StartNew(() =>
+            {
+                var issues = GetAllIssues(item.ProjectKey, p => { });
+
+                _messageBus.Push(new SonarIssuesAvailable { ProjectKey = item.ProjectKey, Issues = issues });
+            });
+        }
+
+        public void Handle(SettingsAvailable item)
+        {
+            if (item.Settings.ContainsKey(SonarCompanionSettingKeys.SonarUri))
+            {
+                _sonarService = new SonarService(new Uri(item.Settings[SonarCompanionSettingKeys.SonarUri]));
+            }
         }
     }
 }

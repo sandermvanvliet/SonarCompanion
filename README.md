@@ -6,7 +6,8 @@ from issues found by Sonar and your solution.
 
 ### Usage
 - Install the extension through the Extensions and Updates window in Visual Studio or by cloning this repo and building the VSIX yourself.
-- In the Tools / Options dialog select Sonar Companion and enter the URL to the SonarQube repository.
+- Download the **sonarcompanion.properties** file from this repository and add it to the root of your solution
+- Edit the **sonarcompanion.properties** file and configure the URI to point to your SonarQube repository
 - Open the issues window by clicking the Tools / Sonar Companion menu item
 
 ### Visual Studio Gallery

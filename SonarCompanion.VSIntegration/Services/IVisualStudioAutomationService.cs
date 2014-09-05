@@ -8,5 +8,6 @@ namespace SonarCompanion_VSIntegration.Services
         List<Project> GetProjectsInSolution();
         void OpenFileAtLine(string fileName, int line);
         Properties GetProperties(string category, string page);
+        string GetSolutionDirectory();
     }
 }

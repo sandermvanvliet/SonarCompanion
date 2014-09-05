@@ -1,59 +1,83 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
-using EnvDTE;
-using Microsoft.VisualStudio.Shell;
 using SonarCompanion.API;
+using SonarCompanion_VSIntegration.MessageBus;
+using SonarCompanion_VSIntegration.MessageBus.Messages;
 using SonarCompanion_VSIntegration.Services;
 using SonarCompanion_VSIntegration.ViewModel;
-using Task = System.Threading.Tasks.Task;
 
 namespace SonarCompanion_VSIntegration.Controls
 {
     /// <summary>
     ///     Interaction logic for SonarIssuesControl.xaml
     /// </summary>
-    public partial class SonarIssuesControl : UserControl, ISonarOptionsEventSink
+    public partial class SonarIssuesControl : UserControl, 
+        IHandler<SolutionLoaded>, 
+        IHandler<SonarProjectsAvailable>,
+        IHandler<SonarIssuesAvailable>,
+        IHandler<SettingsAvailable>,
+        IHandler<SonarIssuesRequested>
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly IMessageBus _messageBus;
 
-        private readonly ISonarIssuesService _sonarIssuesService;
-        private readonly ISonarOptionsService _sonarOptionsService;
-        private readonly IVisualStudioAutomationService _visualStudioAutomationService;
+        private string _defaultProjectName;
 
-        private bool _initialized;
-
-        private List<Project> _projectInSolution;
-        private SonarOptionsPage _properties;
-
-        public SonarIssuesControl(
-            ISonarIssuesService sonarIssuesService,
-            ISonarOptionsService sonarOptionsService,
-            IVisualStudioAutomationService visualStudioAutomationService)
+        public SonarIssuesControl(IMessageBus messageBus)
         {
-            _sonarIssuesService = sonarIssuesService;
-            _sonarOptionsService = sonarOptionsService;
-            _visualStudioAutomationService = visualStudioAutomationService;
-            _sonarOptionsService.Subscribe(this);
+            _messageBus = messageBus;
+
+            _messageBus.Subscribe(this);
 
             InitializeComponent();
-
-            LoadOptions();
         }
 
-        public void ReloadOptions()
+        public void Handle(SolutionLoaded item)
         {
-            LoadOptions();
+            _messageBus.Push(new SonarProjectsRequested());
         }
 
-        private void LoadOptions()
+        public void Handle(SonarIssuesAvailable item)
         {
-            _properties = _sonarOptionsService.GetOptions();
+            var issues = item.Issues
+                .Select(i => new SonarIssueViewModel(i))
+                .OrderByDescending(i => i.Severity)
+                .ThenBy(i => i.Project)
+                .ThenBy(i => i.FileName)
+                .ThenBy(i => i.Line)
+                .ToList();
+
+            SetSafely(IssuesGrid, i => i.ItemsSource = issues);
+
+            SetSafely(ProgressIndicator, p => { p.Visibility = Visibility.Collapsed; });
+            SetSafely(IssuesGrid, l => { l.Visibility = Visibility.Visible; });
+        }
+
+        public void Handle(SonarProjectsAvailable item)
+        {
+            SetSafely(ProjectsComboBox, c =>
+            {
+                // Reset list of issues (might have changed)
+                IssuesGrid.ItemsSource = null;
+
+                c.ItemsSource = item.Projects;
+                if (item.Projects != null)
+                {
+                    c.SelectedItem = item.Projects.SingleOrDefault(p => p.Name == _defaultProjectName);
+                }
+            });
+        }
+
+        public void Handle(SettingsAvailable item)
+        {
+            if (item.Settings.ContainsKey(SonarCompanionSettingKeys.DefaultProject))
+            {
+                _defaultProjectName = item.Settings[SonarCompanionSettingKeys.DefaultProject];
+
+                _messageBus.Push(new SonarProjectsRequested());
+            }
         }
 
         /// <summary>
@@ -94,91 +118,21 @@ namespace SonarCompanion_VSIntegration.Controls
                 return;
             }
 
-            var selectedProject = (SonarProject)e.AddedItems[0];
+            var selectedProject = (SonarProject) e.AddedItems[0];
 
             LoadIssuesForAsync(selectedProject);
         }
 
-        /// <summary>
-        ///     The my control_ on loaded.
-        /// </summary>
-        /// <param name="sender">
-        ///     The sender.
-        /// </param>
-        /// <param name="e">
-        ///     The e.
-        /// </param>
-        private void HandleOnLoaded(object sender, RoutedEventArgs e)
-        {
-            if (!_initialized)
-            {
-                InitializeProjects();
-                _initialized = true;
-            }
-
-            LoadOptions();
-        }
-
-        private void InitializeProjects()
-        {
-            var projects = _sonarIssuesService.GetProjects();
-
-            SetSafely(ProjectsComboBox, c =>
-            {
-                // Reset list of issues (might have changed)
-                IssuesGrid.ItemsSource = null;
-
-                c.ItemsSource = projects;
-                if (projects != null)
-                {
-                    c.SelectedItem = projects.SingleOrDefault(p => p.Name == _properties.DefaultProject);
-                }
-            });
-        }
-
         private void IssuesGrid_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var item = ((DataGrid)sender).SelectedItem as IssueListViewItem;
+            var item = ((DataGridRow) sender).Item as SonarIssueViewModel;
 
             if (item == null)
             {
                 return;
             }
 
-            OpenFileAtLine(item.Project, item.FileName, item.Line);
-        }
-
-        private void OpenFileAtLine(string projectName, string fileName, int lineNumber)
-        {
-            if (_projectInSolution == null || !_projectInSolution.Any())
-            {
-                _projectInSolution = _visualStudioAutomationService.GetProjectsInSolution();
-            }
-
-            var project = _projectInSolution.SingleOrDefault(p => p.Name == projectName);
-
-            if (project == null)
-            {
-                log.ErrorFormat("Unable to find project: {0}", projectName);
-                return;
-            }
-
-            var projectPath = Path.GetDirectoryName(project.FileName);
-
-            if (projectPath == null)
-            {
-                log.ErrorFormat("Unable to determine path for file: {0}", project.FileName);
-                return;
-            }
-
-            var path = Path.Combine(projectPath, fileName);
-
-            if (!File.Exists(path))
-            {
-                log.ErrorFormat("File not found: {0}", path);
-            }
-
-            _visualStudioAutomationService.OpenFileAtLine(path, lineNumber);
+            _messageBus.Push(new NavigateToSource {Project = item.Project, File = item.FileName, Line = item.Line});
         }
 
         private void SetSafely<TControl>(TControl control, Action<TControl> action)
@@ -196,31 +150,13 @@ namespace SonarCompanion_VSIntegration.Controls
 
         private void LoadIssuesForAsync(SonarProject selectedProject)
         {
-            ProgressIndicator.Visibility = Visibility.Visible;
-            IssuesGrid.Visibility = Visibility.Collapsed;
-            SetSafely(IssueLoadProgressBar, pb => pb.Value = 0);
-
-            Task.Run(() =>
-            {
-                var issues = _sonarIssuesService
-                    .GetAllIssues(selectedProject.Key, UpdateProgress)
-                    .Select(i => new IssueListViewItem(i))
-                    .OrderByDescending(i => i.Severity)
-                    .ThenBy(i => i.Project)
-                    .ThenBy(i => i.FileName)
-                    .ThenBy(i => i.Line)
-                    .ToList();
-
-                SetSafely(IssuesGrid, i => i.ItemsSource = issues);
-
-                SetSafely(ProgressIndicator, p => { p.Visibility = Visibility.Collapsed; });
-                SetSafely(IssuesGrid, l => { l.Visibility = Visibility.Visible; });
-            });
+            _messageBus.Push(new SonarIssuesRequested {ProjectKey = selectedProject.Key});
         }
 
-        private void UpdateProgress(int percentage)
+        public void Handle(SonarIssuesRequested item)
         {
-            SetSafely(IssueLoadProgressBar, pb => pb.Value = percentage);
+            SetSafely(ProgressIndicator, p => p.Visibility = Visibility.Visible);
+            SetSafely(IssuesGrid, i => i.Visibility = Visibility.Collapsed);
         }
     }
 }
