@@ -58,6 +58,9 @@
                       IsReadOnly="True"
                       CanUserResizeRows="False"
                       RowHeaderWidth="0">
+                <DataGrid.DataContext>
+                    <DataTemplate DataType="{x:Type vm:SonarIssueViewModel}" />
+                </DataGrid.DataContext>
                 <DataGrid.Resources>
                     <Style TargetType="DataGridRow">
                         <EventSetter Event="MouseDoubleClick" Handler="IssuesGrid_OnMouseDoubleClick" />

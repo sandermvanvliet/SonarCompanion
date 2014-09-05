@@ -1,6 +1,6 @@
 ﻿namespace SonarCompanion_VSIntegration.MessageBus.Messages
 {
-    public class SettingsRequested : Message
+    public abstract class Message
     {
     }
 }

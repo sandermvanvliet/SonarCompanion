@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using SonarCompanion_VSIntegration.MessageBus;
 
-namespace SonarCompanion_VSIntegration.Services
+namespace SonarCompanion_VSIntegration.MessageBus.Messages
 {
     public class SettingsAvailable : Message
     {

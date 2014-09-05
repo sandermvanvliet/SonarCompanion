@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using EnvDTE;
 using SonarCompanion.API;
 
 namespace SonarCompanion_VSIntegration.Services
@@ -89,7 +88,7 @@ namespace SonarCompanion_VSIntegration.Services
                     Message = "Test message at 95",
                     Rule = "Rule 1",
                     Severity = Severity.Critical
-                },
+                }
             };
         }
 

@@ -3,11 +3,9 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using EnvDTE;
 using SonarCompanion.API;
 using SonarCompanion_VSIntegration.MessageBus;
 using SonarCompanion_VSIntegration.MessageBus.Messages;
-using SonarCompanion_VSIntegration.Services;
 using SonarCompanion_VSIntegration.ViewModel;
 
 namespace SonarCompanion_VSIntegration.Controls
@@ -15,8 +13,8 @@ namespace SonarCompanion_VSIntegration.Controls
     /// <summary>
     ///     Interaction logic for SonarIssuesControl.xaml
     /// </summary>
-    public partial class SonarIssuesControl : UserControl, 
-        IHandler<SolutionLoaded>, 
+    public partial class SonarIssuesControl : UserControl,
+        IHandler<SolutionLoaded>,
         IHandler<SonarProjectsAvailable>,
         IHandler<SonarIssuesAvailable>,
         IHandler<SettingsAvailable>,
@@ -34,6 +32,22 @@ namespace SonarCompanion_VSIntegration.Controls
             _messageBus.Subscribe(this);
 
             InitializeComponent();
+        }
+
+        public void Handle(SettingsAvailable item)
+        {
+            if (item.Settings.ContainsKey(SonarCompanionSettingKeys.DefaultProject))
+            {
+                _defaultProjectName = item.Settings[SonarCompanionSettingKeys.DefaultProject];
+
+                _messageBus.Push(new SonarProjectsRequested());
+            }
+        }
+
+        public void Handle(SolutionClosed item)
+        {
+            SetSafely(IssuesGrid, i => i.ItemsSource = null);
+            SetSafely(ProjectsComboBox, p => p.ItemsSource = null);
         }
 
         public void Handle(SolutionLoaded item)
@@ -57,6 +71,12 @@ namespace SonarCompanion_VSIntegration.Controls
             SetSafely(IssuesGrid, l => { l.Visibility = Visibility.Visible; });
         }
 
+        public void Handle(SonarIssuesRequested item)
+        {
+            SetSafely(ProgressIndicator, p => p.Visibility = Visibility.Visible);
+            SetSafely(IssuesGrid, i => i.Visibility = Visibility.Collapsed);
+        }
+
         public void Handle(SonarProjectsAvailable item)
         {
             SetSafely(ProjectsComboBox, c =>
@@ -70,22 +90,6 @@ namespace SonarCompanion_VSIntegration.Controls
                     c.SelectedItem = item.Projects.SingleOrDefault(p => p.Name == _defaultProjectName);
                 }
             });
-        }
-
-        public void Handle(SettingsAvailable item)
-        {
-            if (item.Settings.ContainsKey(SonarCompanionSettingKeys.DefaultProject))
-            {
-                _defaultProjectName = item.Settings[SonarCompanionSettingKeys.DefaultProject];
-
-                _messageBus.Push(new SonarProjectsRequested());
-            }
-        }
-
-        public void Handle(SonarIssuesRequested item)
-        {
-            SetSafely(ProgressIndicator, p => p.Visibility = Visibility.Visible);
-            SetSafely(IssuesGrid, i => i.Visibility = Visibility.Collapsed);
         }
 
         /// <summary>
@@ -167,12 +171,6 @@ namespace SonarCompanion_VSIntegration.Controls
             {
                 _messageBus.Push(new SonarProjectsRequested());
             }
-        }
-
-        public void Handle(SolutionClosed item)
-        {
-            SetSafely(IssuesGrid, i => i.ItemsSource = null);
-            SetSafely(ProjectsComboBox, p => p.ItemsSource = null);
         }
     }
 }

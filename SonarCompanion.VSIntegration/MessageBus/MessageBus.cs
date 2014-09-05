@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
+using SonarCompanion_VSIntegration.MessageBus.Messages;
 
 namespace SonarCompanion_VSIntegration.MessageBus
 {

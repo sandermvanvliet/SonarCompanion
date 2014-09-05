@@ -1,9 +1,5 @@
-﻿namespace SonarCompanion_VSIntegration.MessageBus
+﻿namespace SonarCompanion_VSIntegration.MessageBus.Messages
 {
-    public abstract class Message
-    {
-    }
-
     public interface IHandler
     {
     }
