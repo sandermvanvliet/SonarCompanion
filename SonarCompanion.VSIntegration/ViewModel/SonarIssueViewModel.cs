@@ -10,7 +10,14 @@ namespace SonarCompanion_VSIntegration.ViewModel
 
             var parts = issue.Component.Split(':');
 
-            Project = parts[1].Trim();
+            if (parts.Length == 2)
+            {
+                Project = parts[1].Trim();
+            }
+            else
+            {
+                Project = issue.Component;
+            }
 
             FileName = issue.FileName;
 

@@ -2,7 +2,7 @@
 
 namespace SonarCompanion.API
 {
-    internal class SonarIssueList
+    public class SonarIssueList
     {
         public bool MaxResultsReached { get; set; }
         public Paging Paging { get; set; }

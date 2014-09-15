@@ -174,7 +174,6 @@
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="SonarCompanionSettingKeys.cs" />
     <Compile Include="Services\SonarIssuesService.cs" />
-    <Compile Include="Services\SonarServiceDouble.cs" />
     <Compile Include="Services\VisualStudioAutomationService.cs" />
     <Compile Include="Interop\SonarIssueTextViewMarginProvider.cs" />
     <Compile Include="ViewModel\SonarIssueViewModel.cs" />

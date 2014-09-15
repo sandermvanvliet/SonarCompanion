@@ -1,6 +1,6 @@
 ﻿namespace SonarCompanion.API
 {
-    internal class Paging
+    public class Paging
     {
         public int PageIndex { get; set; }
         public int PageSize { get; set; }

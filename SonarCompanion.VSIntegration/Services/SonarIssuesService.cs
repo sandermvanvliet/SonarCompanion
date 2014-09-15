@@ -47,6 +47,11 @@ namespace SonarCompanion_VSIntegration.Services
 
         public List<SonarProject> GetProjects()
         {
+            if (_sonarService == null)
+            {
+                return new List<SonarProject>();
+            }
+
             return _sonarService.GetProjects();
         }
 

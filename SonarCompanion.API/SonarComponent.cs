@@ -1,6 +1,6 @@
 ﻿namespace SonarCompanion.API
 {
-    internal class SonarComponent
+    public class SonarComponent
     {
         public string Key { get; set; }
         public string Qualifier { get; set; }
