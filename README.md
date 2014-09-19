@@ -13,6 +13,15 @@ from issues found by Sonar and your solution.
 ### Visual Studio Gallery
 The extension can be downloaded from the Visual Studio Gallery [here](http://visualstudiogallery.msdn.microsoft.com/c55ea298-2ecd-4f35-b483-34e2184cc4fb)
 
+
+### Changelist
+**Version 1.0.3** Foo
+
+- Added the new sonarcompanion.properties file to enable per-solution settings
+- Added auto-refresh option.
+- Integration with Visual Studio has been reworked to be less tightly coupled
+- And lots of behind-the-scenes changes 
+
 ### Contributors
 - Sander van Vliet [@SanderMvanVliet](http://twitter.com/SanderMvanVliet)
 - Bjorn Kuiper [SouthernSun](https://github.com/southernsun)
