@@ -9,5 +9,6 @@ namespace SonarCompanion.API
         public List<SonarIssue> Issues { get; set; }
         public List<SonarComponent> Components { get; set; }
         public List<SonarRule> Rules { get; set; }
+        public List<SonarProject> Projects { get; set; }
     }
 }

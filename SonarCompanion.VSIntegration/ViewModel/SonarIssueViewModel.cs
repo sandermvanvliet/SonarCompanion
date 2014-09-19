@@ -10,7 +10,7 @@ namespace SonarCompanion_VSIntegration.ViewModel
 
             var parts = issue.Component.Split(':');
 
-            if (parts.Length == 2)
+            if (parts.Length >= 2)
             {
                 Project = parts[1].Trim();
             }
@@ -21,7 +21,7 @@ namespace SonarCompanion_VSIntegration.ViewModel
 
             FileName = issue.FileName;
 
-            string folder = string.Empty;
+            var folder = string.Empty;
 
             if (parts.Length >= 3)
             {

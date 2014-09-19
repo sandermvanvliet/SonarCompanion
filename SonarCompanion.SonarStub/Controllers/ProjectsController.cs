@@ -11,8 +11,9 @@ namespace SonarCompanion.SonarStub.Controllers
         {
             return new List<SonarProject>
             {
-                new SonarProject { id = "project1", k = "projectKey1", nm = "Project 1"},
-                new SonarProject { id = "project2", k = "projectKey2", nm = "Project 2"}
+                new SonarProject { id = "123", k = "TestProject1", nm = "TestProject1", sc = "PRJ", qu = "TRK"},
+                new SonarProject { id = "234", k = "TestProject2", nm = "TestProject2", sc = "PRJ", qu = "TRK"},
+                new SonarProject { id = "345", k = "TestProject3", nm = "TestProject3", sc = "PRJ", qu = "TRK"},
             };
         }
     }
