@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -144,7 +145,7 @@ namespace SonarCompanion_VSIntegration.Controls
                 return;
             }
 
-            _messageBus.Push(new NavigateToSource {Project = item.Project, File = item.FileName, Line = item.Line});
+            _messageBus.Push(new NavigateToSource {Project = item.Project, File = Path.Combine(item.Folder, item.FileName), Line = item.Line});
         }
 
         private void SetSafely<TControl>(TControl control, Action<TControl> action)
