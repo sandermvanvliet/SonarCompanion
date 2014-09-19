@@ -42,14 +42,14 @@ namespace SonarCompanion_VSIntegration.Interop
 
         public static Guid GetProjectType(IVsHierarchy hierarchy)
         {
-            var projectType = string.Empty;
+            var projectType = String.Empty;
 
             var aggProject = hierarchy as IVsAggregatableProject;
 
             if (aggProject != null)
                 aggProject.GetAggregateProjectTypeGuids(out projectType);
 
-            return projectType != string.Empty ? new Guid(projectType) : Guid.Empty;
+            return projectType != String.Empty ? new Guid(projectType) : Guid.Empty;
         }
 
         public static uint GetItemId(IVsHierarchy hierarchy)
@@ -102,7 +102,7 @@ namespace SonarCompanion_VSIntegration.Interop
 
         public static string QueryEditResultToString(tagVSQueryEditResult result)
         {
-            var retval = string.Empty;
+            var retval = String.Empty;
 
             switch (result)
             {
@@ -119,7 +119,7 @@ namespace SonarCompanion_VSIntegration.Interop
 
         public static string QueryEditResultFlagsToString(tagVSQueryEditResultFlags flags)
         {
-            var retval = string.Empty;
+            var retval = String.Empty;
 
             switch (flags)
             {
@@ -207,7 +207,7 @@ namespace SonarCompanion_VSIntegration.Interop
             string relativePath,
             Func<string, bool> filter)
         {
-            if (string.IsNullOrEmpty(projectName))
+            if (String.IsNullOrEmpty(projectName))
             {
                 throw new ArgumentNullException("projectName");
             }
@@ -280,6 +280,29 @@ namespace SonarCompanion_VSIntegration.Interop
             }
 
             return targetFolder;
+        }
+
+        public static Guid SonarCompanionOutputPaneGuid = new Guid("0AD8734F-0BBA-4DFD-B412-E09B9D38C93A");
+
+        public static IVsOutputWindowPane GetOutputWindowPane()
+        {
+            var outputWindow = (IVsOutputWindow)Package.GetGlobalService(typeof (IVsOutputWindow));
+
+            if (outputWindow == null)
+            {
+                return null;
+            }
+
+            outputWindow.CreatePane(ref SonarCompanionOutputPaneGuid,
+                "Sonar Companion",
+                1,
+                1);
+
+            IVsOutputWindowPane outputWindowPane;
+
+            outputWindow.GetPane(ref SonarCompanionOutputPaneGuid, out outputWindowPane);
+
+            return outputWindowPane;
         }
     }
 }

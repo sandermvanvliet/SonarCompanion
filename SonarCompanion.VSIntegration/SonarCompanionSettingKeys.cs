@@ -6,5 +6,6 @@ namespace SonarCompanion_VSIntegration
         public const string DefaultProject = "defaultProjectName";
         public const string AutoRefreshEnabled = "autoRefresh.enabled";
         public const string AutoRefreshInterval = "autoRefresh.interval";
+        public const string EnableMessageTracing = "enableMessageTracing";
     }
 }

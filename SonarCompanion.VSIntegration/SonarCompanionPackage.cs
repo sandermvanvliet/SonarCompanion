@@ -20,6 +20,7 @@ namespace SonarCompanion_VSIntegration
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideToolWindow(typeof (SonarIssuesToolWindow))]
     [Guid(GuidList.guidSonarCompanion_VSIntegrationPkgString)]
+    [ProvideAutoLoad(UIContextGuids80.NoSolution)]
     public sealed class SonarCompanionPackage : Package
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -60,6 +61,7 @@ namespace SonarCompanion_VSIntegration
             componentModel.GetService<IVisualStudioAutomationService>();
             componentModel.GetService<SettingsService>();
             componentModel.GetService<AutoRefreshService>();
+            componentModel.GetService<OutputWindowService>();
 
             _solutionEventsSink = new SolutionEventsSink(messageBus, GetService(typeof (SVsSolution)) as IVsSolution);
             _runningDocumentsTableEventSink = new RunningDocumentTableEventSink(GetService(typeof(SVsRunningDocumentTable)) as IVsRunningDocumentTable, messageBus);
