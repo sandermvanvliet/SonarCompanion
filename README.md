@@ -15,7 +15,7 @@ The extension can be downloaded from the Visual Studio Gallery [here](http://vis
 
 
 ### Changelist
-**Version 1.0.3** Foo
+**Version 1.0.3**
 
 - Added the new sonarcompanion.properties file to enable per-solution settings
 - Added auto-refresh option.
