@@ -15,7 +15,6 @@ namespace SonarCompanion_VSIntegration.Controls
     ///     Interaction logic for SonarIssuesControl.xaml
     /// </summary>
     public partial class SonarIssuesControl : UserControl,
-        IHandler<SolutionLoaded>,
         IHandler<SonarProjectsAvailable>,
         IHandler<SonarIssuesAvailable>,
         IHandler<SettingsAvailable>,
@@ -49,11 +48,6 @@ namespace SonarCompanion_VSIntegration.Controls
         {
             SetSafely(IssuesGrid, i => i.ItemsSource = null);
             SetSafely(ProjectsComboBox, p => p.ItemsSource = null);
-        }
-
-        public void Handle(SolutionLoaded item)
-        {
-            _messageBus.Push(new SonarProjectsRequested());
         }
 
         public void Handle(SonarIssuesAvailable item)

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using SonarCompanion_VSIntegration.MessageBus.Messages;
@@ -66,6 +67,10 @@ namespace SonarCompanion_VSIntegration.MessageBus
             {
                 return;
             }
+
+            var methodInfo = new StackTrace(1).GetFrame(0).GetMethod();
+
+            item.Originator = string.Format("{0}: {1}", methodInfo.DeclaringType.Name, methodInfo.Name);
 
             _queue.Enqueue(item);
 

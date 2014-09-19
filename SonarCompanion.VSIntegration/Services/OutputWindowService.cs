@@ -44,7 +44,7 @@ namespace SonarCompanion_VSIntegration.Services
             {
                 if (bool.Parse(item.Settings[SonarCompanionSettingKeys.EnableMessageTracing]))
                 {
-                    _messageBus.Subscribe(new DelegateHandler<Message>(m => WriteMessage("Message handled: " + m)));
+                    _messageBus.Subscribe(new DelegateHandler<Message>(m => WriteMessage("Message handled: " + m + " Originated at: " + m.Originator)));
                 }
             }
         }
