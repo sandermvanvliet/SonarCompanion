@@ -1,20 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SonarCompanion.Console", "SonarCompanion.Console\SonarCompanion.Console.csproj", "{CF5E9F11-0354-4C7F-BA71-E4CE0AEF33A9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SonarCompanion.API", "SonarCompanion.API\SonarCompanion.API.csproj", "{A5CB2CFA-60F5-4E08-8D15-B71B9D7BC8BB}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SonarCompanion.VSIntegration", "SonarCompanion.VSIntegration\SonarCompanion.VSIntegration.csproj", "{5E3C2076-BACD-4828-BFE3-54523951F0F3}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AB7EF9EF-C265-4931-9D79-036862C32CB6}"
 	ProjectSection(SolutionItems) = preProject
 		LICENSE = LICENSE
 		README.md = README.md
 		sonarcompanion.properties = sonarcompanion.properties
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SonarCompanion.Console", "SonarCompanion.Console\SonarCompanion.Console.csproj", "{CF5E9F11-0354-4C7F-BA71-E4CE0AEF33A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SonarCompanion.API", "SonarCompanion.API\SonarCompanion.API.csproj", "{A5CB2CFA-60F5-4E08-8D15-B71B9D7BC8BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SonarCompanion.VSIntegration", "SonarCompanion.VSIntegration\SonarCompanion.VSIntegration.csproj", "{5E3C2076-BACD-4828-BFE3-54523951F0F3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SonarCompanion.SonarStub", "SonarCompanion.SonarStub\SonarCompanion.SonarStub.csproj", "{C65528E5-4503-4765-A8B4-9EAA01CEDE55}"
 EndProject
